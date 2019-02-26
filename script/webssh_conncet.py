@@ -23,6 +23,3 @@ class Remote():
 			return False
 
 
-
-# a = Remote()
-# a.ssh_connect('119.23.12.254','','duanpeng')
