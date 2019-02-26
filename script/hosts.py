@@ -14,7 +14,7 @@ class hostinfo():
 
 	def get_host(self):
 		for zone in self.zone:
-			self.client = AcsClient('LTAIareXfGARtOV0', 'Jxu5aMNVVaX4qe5AAYEheCdqvYigzm', zone)
+			self.client = AcsClient('', '', zone) #阿里云key
 			for page_number in range(1, self.page):
 				request = DescribeInstancesRequest.DescribeInstancesRequest()
 				request.set_accept_format('json')
@@ -35,9 +35,3 @@ class hostinfo():
 			self.count[key] = len(values)
 		with open('grouping_host_count','w') as files:
 			pickle.dump(self.count,files)
-
-# a = hostinfo()
-# a.grouping_count()
-# hostinfos = hostinfo()
-# for i in sum(hostinfos.get_host(),[]):
-# 	print i['PublicIpAddress']['IpAddress'][0]

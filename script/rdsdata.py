@@ -11,15 +11,12 @@ class datainfo():
 		self.types = ['sharding', 'replicate']
 		self.DBid = []
 		self.DBinfo = []
-		#self.query_mysql()
-		#self.query_redis()
-		#self.query_mogo()
 
 
 	def get_DBid(self):
 		try:
 			for zone in self.zone:
-				client = AcsClient('LTAIareXfGARtOV0', 'Jxu5aMNVVaX4qe5AAYEheCdqvYigzm', zone)
+				client = AcsClient('', '', zone)
 				request = DescribeDBInstancesRequest.DescribeDBInstancesRequest()
 				request.set_accept_format('json')
 				response = json.loads(client.do_action_with_exception(request))
@@ -30,7 +27,7 @@ class datainfo():
 	def query_mysql(self):
 		self.get_DBid()
 		for zone in self.zone:
-			client = AcsClient('LTAIareXfGARtOV0', 'Jxu5aMNVVaX4qe5AAYEheCdqvYigzm',zone)
+			client = AcsClient('', '',zone)
 			for ids in sum(self.DBid, []):
 				request = DescribeDBInstanceAttributeRequest.DescribeDBInstanceAttributeRequest()
 				request.set_accept_format('json')
@@ -41,7 +38,7 @@ class datainfo():
 
 	def query_redis(self):
 		for zone in self.zone:
-			client  = AcsClientv3('LTAIareXfGARtOV0', 'Jxu5aMNVVaX4qe5AAYEheCdqvYigzm',zone)
+			client  = AcsClientv3('', '',zone)
 			request = CommonRequest()
 			request.set_accept_format('json')
 			request.set_domain('r-kvstore.aliyuncs.com')
@@ -53,7 +50,7 @@ class datainfo():
 
 	def query_mogo(self):
 		for zone in self.zone:
-			client  = AcsClientv3('LTAIareXfGARtOV0', 'Jxu5aMNVVaX4qe5AAYEheCdqvYigzm',zone)
+			client  = AcsClientv3('', '',zone)
 			for types in self.types:
 				request = CommonRequest()
 				request.set_accept_format('json')
@@ -65,8 +62,3 @@ class datainfo():
 				self.DBinfo.append(response['DBInstances']['DBInstance'])
 		return self.DBinfo
 
-
-
-# a = datainfo()
-# for i in sum(a.DBinfo,[]):
-# 	print i['']

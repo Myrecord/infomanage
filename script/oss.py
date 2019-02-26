@@ -9,8 +9,8 @@ from datetime import datetime
 class Ossoperation:
 
 	def __init__(self):
-		self.endpoint = 'http://oss-cn-hangzhou.aliyuncs.com'
-		self.auth = oss2.Auth('LTAIareXfGARtOV0', 'Jxu5aMNVVaX4qe5AAYEheCdqvYigzm')
+		self.endpoint = ''   #oss地址
+		self.auth = oss2.Auth('', '')  #阿里云key
 		self.Bucket = oss2.Bucket(self.auth, self.endpoint, 'gy-download-apk')
 
 

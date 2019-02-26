@@ -10,7 +10,7 @@ from aliyunsdkcdn.request.v20141111 import DescribeTopDomainsByFlowRequest
 
 class pushcdn():
 	def __init__(self):
-		self.client = AcsClient('LTAIareXfGARtOV0', 'Jxu5aMNVVaX4qe5AAYEheCdqvYigzm', 'cn-hangzhou')
+		self.client = AcsClient('', '', 'cn-hangzhou')
 		self.domain = []
 		self.domain_ranking = {}
 
