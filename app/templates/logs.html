@@ -1,0 +1,197 @@
+ <head>
+     <link href="{{ url_for('static', filename='fonts/fonts.css') }}" rel="stylesheet" />
+      <link type="text/css" rel="stylesheet" href="static/css/materialize.min.css"  media="screen,projection"/>
+      <link type="text/css" rel="stylesheet" href="static/chosen/css/chosen.css"/>
+
+      <script type="text/javascript" src="static/js/jquery-2.1.1.min.js"></script>
+      <script type="text/javascript" src="static/js/materialize.min.js"></script> 
+      <script type="text/javascript" src="static/chosen/js/chosen.jquery.js"></script>
+	
+     <nav >
+     <div class="nav-wrapper #000000 black">
+      <a href="#!" class="brand-logo center">Web Automation</a>
+      <ul class="right hide-on-med-and-down">
+        {% if current_user.is_authenticated %}
+            <li>用户 : {{ current_user.username }}&emsp;</li>
+            <li><a href="{{ url_for('auth.logout') }}">退出登录</a></li>
+            <li><a></a></i>
+        {% endif %}
+     </ul>
+   </div>
+    </nav>     
+
+
+
+<style> 
+.bor{border:1px dashed #F00;width:300px;height:60px;margin-top:10px} 
+span{display:block}/*css注释说明：让span形成块*/ 
+</style> 
+
+
+</head>
+
+<body>
+
+<div id="test" class="row">
+      <div id="left" class="col s2 ">
+     <ul class="collapsible popout" data-collapsible="accordion">
+    <li>
+     <a href="{{ url_for('.index') }}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">home</i>首页</div></a>
+    </li>
+    <li>
+    <a href="{{ url_for('.checkip') }}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">place </i>I P 查询</div></a>
+    </li>
+
+    <li>
+	<a href="{{ url_for('main.listfile')}}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">swap_vert</i>上传下载</div></a>
+    </li>
+
+    <li>
+	<a href="{{ url_for('.update')}}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">fiber_new</i>版本更新</div></a>
+    </li>
+
+    <li>
+     <div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">cloud_queue</i>资源管理</div>
+      <div class="collapsible-body">
+        <ul class="collection active">
+           <li class="collection-item" style="border:0;">
+               <a href="{{ url_for('main.loadcdn') }}" style="color:#000;">同步CDN</a>
+           </li>
+           <li class="collection-item" style="border:0;">
+               <a href="{{ url_for('main.osslist') }}" style="color:#000;">资源存储</a>
+           </li>
+        </ul>
+     </div>
+    </li>
+
+
+    <li>
+      <div class="collapsible-header active" style="font-weight:bold;background-color:#fff;"><i class="material-icons">computer</i>主机信息</div>
+      <div class="collapsible-body">
+        <ul class="collection active">
+           <li class="collection-item active" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('.hostgroup')}}" style="color:#000;">主机分组</a>
+           </li>
+           <li class="collection-item active" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('.host') }}" style="color:#000;">主机管理</a>
+           </li>
+             <li class="collection-item" style="border:0;">
+	       <a href="{{ url_for('main.datastores') }}" style="color:#000;">数据存储</a>
+	   </li>
+        </ul>
+     </div>
+    </li>
+    <li>
+           <div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">face</i>用户管理</div>
+      <div class="collapsible-body">
+        <ul class="collection">
+            
+           <li class="collection-item" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('main.users')}}" style="color:#000;">用户列表</a>
+           </li>
+
+ 	   <li class="collection-item" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('main.role')}}" style="color:#000;">角色管理</a>
+           </li>
+
+           <li class="collection-item" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('main.menu')}}" style="color:#000;">菜单管理</a>
+           </li>
+        </ul>
+     </div>
+    </li>
+         <li>
+        <a href="{{ url_for('.logs')}}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">fiber_new</i>日志审计</div></a>
+    </li>
+  </ul>
+</div>
+
+<div class="col s10">
+        
+        <table class="highlight">
+                <thead>
+                  <tr>
+                      <th data-field="id">用户</th>
+                      <th data-field="name">访问地址</th>
+                      <th data-field="name">操作时间</th>
+                      <th data-field="name">操作详情</th>
+                  </tr>
+                </thead>
+        
+                <tbody>
+                {% for i in user_log %}
+                  <tr>
+                    <td>{{ i.user }}</td>
+                    <td>{{ i.address }}</td>
+                    <td>{{ i.datetime }}</td>
+                    <td>{{ i.strs }}</td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            
+            <div class="row">
+              <div class="col s4"></div>
+              <ul class="pagination">
+              {%if pagination.has_prev%}
+                    <li class="disabled"><a href="{{ url_for('main.logs',page=i) }}"><i class="material-icons">chevron_left</i></a></li>
+              {% endif %}
+
+              {%set page_now=pagination.page%}
+              {%set page_count=pagination.pages%}
+
+              {%for i in pagination.iter_pages()%}
+                  {% if i %}
+                      {% if i==pagination.page %}
+                       <li class="waves-effect"><a href="{{ url_for('main.logs',page=i) }}">{{ i }}</a></li>
+                      {% else %}
+                       <li class="waves-effect"><a href="{{ url_for('main.logs',page=i) }}">{{ i }}</a></li>
+                      {% endif %}
+                   {% endif %}
+                {% endfor %}
+                {%if pagination.has_next %}
+                    <li class="waves-effect"><a href="{{ url_for('main.logs',page=pagination.next_num) }}"><i class="material-icons">chevron_right</i></a></li>
+                {% endif %}
+
+                <li class="waves-effect">
+                        页数({{page_now}}/{{page_count}})
+                </li>
+
+            </ul>
+            </div>
+</div>
+
+
+
+
+<script>
+$(function(){
+    $("#downfiles").click(function(){
+        $.ajax({
+             type:'post',
+             url:'downfile',
+             data:$("#filedowns").serialize(),
+             cache:true, 
+             async:false,
+             dataType:'html',
+             success:function(data){
+                 alert('111111');
+             },
+             error:function(data){
+                 alert('222222');
+             },
+        });
+    });
+})
+
+
+$('.chzn-select').chosen({
+  disable_search_threshold: 10,
+  no_results_text: '没有找到结果',
+  allow_single_deselect:true,
+  width: '80%'
+});
+
+
+</script>
+</body>

@@ -1,0 +1,7 @@
+<p>你好 {{ user.username }},</p>
+<p>欢迎注册 <b>Web Automation</b>!</p>
+<p>要确认您的账户请<a href="{{ url_for('auth.confirm', token=token, _external=True) }}">点击此处</a>.</p>
+<p>或者在浏览器中输入以下地址完成认证:</p>
+<p>{{ url_for('auth.confirm', token=token, _external=True) }}</p>
+
+

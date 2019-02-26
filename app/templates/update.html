@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+{% block test %}
+<div id="" class="col s11 ">
+  <form id="updateform" method="POST" action="/updatedata">
+
+    <div class="row">
+      <div class="col s4"></div>
+      <div class="input-field col s2">
+            <select name="areas">
+              <optgroup label="金币场">
+                <option value="jinbichang">金币场</option>
+              </optgroup>
+              <optgroup label="地方">
+                  <option value="gejiu YNgejiu">个旧</option>
+                  <option value="jinzhou JinZhou">锦州</option>
+                  <option value="wenshan YNwenshan">文山</option>
+                  <option value="xishuangbanna YNxsbn">西双版纳</option>
+                  <option value="baoshan YNbaoshan">保山</option>
+                  <option value="jiayu JiaYu">嘉鱼</option>
+              </optgroup>
+            </select>
+      </div>
+
+
+      <div class="input-field col s2">
+        <select name="types">
+          <option value="" disabled selected>类型</option>
+          <option value="server">Server</option>
+          <option value="client">Client</option>
+        </select>
+      </div>
+ </div>
+
+
+    <div class="row">
+      <div class="col l2"></div>
+      <div class="input-field col l7">
+        <i class="material-icons prefix">description</i>
+        <input name="version" id="icon_prefix" type="text" placeholder="" class="validate">
+        <label for="icon_prefix">版本</label>
+      </div>
+      <div class="col l2"></div>
+    </div>
+
+    <div class="row">
+      <div class="col l2"></div>
+      <div class="input-field col l7">
+        <i class="material-icons prefix">view_headline</i>
+        <input id="shijian" name="dates" placeholder="定时任务可选" type="text" class="validate">
+        <label for="icon_prefix">定时</label>
+      </div><br>
+      <div class="col l2"></div>
+    </div>
+
+
+    <div class="row">
+      <div class="col l7"></div>
+      <div class="input-field col l3">
+         <a id="subupdates" class="btn waves-effect waves-light"><i class="material-icons right">send</i>更新</a>
+      </div>
+      <div class="col l5"></div>
+    </div>
+  </form>
+  <p><b>更新记录：</b></p>
+  <table class="col l12">
+    <thead>
+      <tr>
+        <th data-field="id">用户</th>
+        <th data-field="name">地区</th>
+        <th data-field="name">类型</th>
+        <th data-field="price">版本</th>
+        <th data-field="price">更新时间</th>
+        <th data-field="price">倒计时</th>
+        <th data-field="price">Aciton</th>
+      </tr>
+    </thead> 
+
+    <tbody>
+      <form method="POST">
+      {% for task in group_record %}
+      <tr>
+        <td >{{ task.user }}</td>
+        <td>{{ task.area }}</td>
+        <td>{{ task.types }}</td>
+        <td>{{ task.version }}</td>
+        <td>{{ task.dates }}</td>
+        <td id="time{{ task.id }}"><script>var timer=setInterval(function(){timeleft('{{ task.id }}',new Date('{{ task.dates }}'));},1000);</script></td>
+        <td><a href="#modal{{ task.id }}" title="取消任务"><i class="material-icons">delete</i></a>
+          <div id="modal{{ task.id }}" class="modal" style="width:700px">
+            <div class="modal-content">
+              <h5>确定要取消此任务?</h5>
+            </div>
+            <div class="modal-footer">
+              <a id="" class=" modal-action modal-close waves-effect waves-green btn-flat" onclick="deljobs('{{ task.id }}','{{ task.dates }}')">同意</a>
+            </div>
+          </div>
+
+        </td>
+      </td>
+      </tr>
+      {% endfor %}
+    </form>
+    </tbody>
+  </table>
+  <div class="col l4"></div>
+
+  
+  <ul class="pagination">
+    {% if pagination.has_prev %}
+        <li class="disabled"><a href="{{ url_for('main.update',page=pagination.prev_num) }}"><i class="material-icons">chevron_left</i></a></li>
+    {% endif %}
+
+    {%set page_now=pagination.page%}
+    {%set page_count=pagination.pages%}
+    {%for i in pagination.iter_pages()%}
+      {% if i %}
+          {% if i==pagination.page %}
+            <li class="waves-effect"><a href="{{ url_for('main.update',page=i) }}">{{ i }}</a></li>
+          {% else %}
+            <li class="waves-effect"><a href="{{ url_for('main.update',page=i) }}">{{ i }}</a></li>
+          {% endif %}
+      {% endif %}
+    {% endfor %}
+
+    {%if pagination.has_next %}
+        <li class="waves-effect"><a href="{{ url_for('main.update',page=pagination.next_num) }}"><i class="material-icons">chevron_right</i></a></li>
+    {% endif %}
+
+    <li class="waves-effect">
+        页数({{page_now}}/{{page_count}})
+    </li>
+  </ul>
+
+</div>
+
+<script type="text/javascript">
+
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+      {% for i in messages %}
+         Materialize.toast('{{ i }}', 5000,'rounded')
+      {% endfor %}
+  {% endif %}
+  {% endwith %}
+
+
+  function deljobs(id,name){
+    var delstatus = {
+        'id':id,
+        'name':name,
+    }
+    $.ajax({
+      cache: false,
+      type: "POST",
+      url: "deljobs",
+      data: delstatus,
+      async: false,
+      dataType: "json",
+      success: function(data) {
+        window.location.href="{{ url_for('main.update') }}";
+          },
+      error: function() {
+            Materialize.toast('Error: 没有权限操作', 5000,'rounded')
+          },
+  })
+  }
+
+
+
+  function timeleft(id,endtime,gettime = new Date()){
+    var leftTime = endtime - gettime;
+    if (leftTime <= 0){
+        {#clearInterval(timer);#}
+        $('#time'+id).text("已执行");
+        
+    }else{
+        var days = Math.floor(leftTime/(1000*60*60*24));//天
+        var hours = Math.floor(leftTime/(1000*60*60)%24);//时
+        var mi = Math.floor(leftTime/(1000*60)%60);//分
+        var se = Math.floor(leftTime/1000%60);//秒
+        <!-- var ms = Math.floor(leftTime%1000);//毫秒 -->
+        $('#time'+id).text(days+"天"+hours+"时"+mi+"分"+se+"秒");
+  }
+}
+
+
+
+  $(document).ready(function () {
+    $('select').material_select();
+  });
+
+   $("#subupdates").click(function () {
+      $("#updateform").submit();
+    });
+
+  $("#shijian").jeDate({
+    format: "YYYY-MM-DD hh:mm:ss"
+  });
+
+  $(document).ready(function () {
+    // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+    $('.modal').modal();
+  });
+
+
+
+  $(".dropdown-button").dropdown({
+    hover: false
+
+  });
+</script>
+{% endblock %}

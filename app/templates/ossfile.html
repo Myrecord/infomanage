@@ -1,0 +1,219 @@
+<head>
+      <link href="{{ url_for('static', filename='fonts/fonts.css') }}" rel="stylesheet" />
+      <link type="text/css" rel="stylesheet" href="static/css/materialize.min.css"  media="screen,projection"/>
+      <link type="text/css" rel="stylesheet" href="static/dropzone/css/dropzone.css"/>
+
+
+      <script type="text/javascript" src="static/js/jquery-2.1.1.min.js"></script>
+      <script type="text/javascript" src="static/js/materialize.min.js"></script>
+      <script type="text/javascript" src="static/dropzone/js/dropzone.js"></script>
+
+
+      <nav >
+        <div class="nav-wrapper #000000 black">
+         <a href="#!" class="brand-logo center">Web Automation</a>
+         <ul class="right hide-on-med-and-down">
+           {% if current_user.is_authenticated %}
+               <li>用户 : {{ current_user.username }}&emsp;</li>
+               <li><a href="{{ url_for('auth.logout') }}">退出登录</a></li>
+               <li><a></a></i>
+           {% endif %}
+        </ul>
+      </div>
+       </nav>
+
+</head>
+
+<body>
+
+<div id="test" class="row">
+      <div id="left" class="col s2 ">
+     <ul class="collapsible popout" data-collapsible="accordion">
+    <li>
+     <a href="{{ url_for('main.index') }}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">home</i>首页</div></a>
+    </li>
+    <li>
+    <a href="{{ url_for('main.checkip') }}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">place </i>I P 查询</div></a>
+    </li>
+
+    <li>
+	<a href="{{ url_for('main.listfile')}}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">swap_vert</i>上传下载</div></a>
+    </li>
+
+    <li>
+	<a href="{{ url_for('main.update')}}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">fiber_new</i>版本更新</div></a>
+    </li>
+
+
+    <li>
+     <div class="collapsible-header active" style="font-weight:bold;background-color:#fff;"><i class="material-icons">cloud_queue</i>资源管理</div>
+      <div class="collapsible-body">
+        <ul class="collection active">
+           <li class="collection-item active" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('main.loadcdn') }}" style="color:#000;">同步CDN</a>
+           </li>
+           <li class="collection-item active" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('main.osslist') }}" style="color:#000;">资源存储</a>
+           </li>
+        </ul>
+     </div>
+    </li>
+
+
+    <li>
+      <div class="collapsible-header active" style="font-weight:bold;background-color:#fff;"><i class="material-icons">computer</i>主机信息</div>
+      <div class="collapsible-body">
+        <ul class="collection active">
+           <li class="collection-item active" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('.hostgroup')}}" style="color:#000;">主机分组</a>
+           </li>
+           <li class="collection-item active" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('.host') }}" style="color:#000;">主机管理</a>
+           </li>
+            <li class="collection-item" style="border:0;">
+	       <a href="{{ url_for('main.datastores') }}" style="color:#000;">数据存储</a>
+	   </li>
+        </ul>
+     </div>
+    </li>
+    <li>
+          <div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">face</i>用户管理</div>
+      <div class="collapsible-body">
+        <ul class="collection">
+
+           <li class="collection-item" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('main.users')}}" style="color:#000;">用户列表</a>
+           </li>
+
+           <li class="collection-item" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('main.role')}}" style="color:#000;">角色管理</a>
+           </li>
+
+           <li class="collection-item" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('main.menu')}}" style="color:#000;">菜单管理</a>
+           </li>
+        </ul>
+     </div>
+    </li>
+         <li>
+        <a href="{{ url_for('.logs')}}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">fiber_new</i>日志审计</div></a>
+    </li>
+  </ul>
+</div>
+
+<p>
+<p>
+
+
+
+<div class="col s10">
+<a href="#" data-activates="slide-out" class="button-collapse waves-effect waves-light btn btn-floating  blue">上传</a>
+<div id="slide-out" class="side-nav">
+    <p>
+    <h5>上传文件(CDN)</h5>
+    <hr>
+    <p>
+    <div class="field">
+        <div id="file" class="dropzone" style="border: 2px dashed #e1c2f7;margin: 5%;height: 60%;">
+            <div class="dz-message" data-dz-message style="margin:15em 0">将文件拖拽此处或<b style="color:#829aff">点击上传</b></div>
+        </div>
+    </div>
+    <div class="col s3"></div>
+    <div class="col s3">
+     <a id='uploading' valuse="{{ chdirs }}" class="waves-effect waves-light btn buttons" disabled="true"><i class="material-icons left">file_upload</i>上传</a>
+    </div>
+    <div class="col s3">
+        <a id='remove' class="waves-effect waves-light btn buttons" disabled="true"><i class="material-icons left">clear</i>清空</a>
+    </div>
+</div>
+
+
+
+     <table>
+        <thead>
+          <tr>
+              <th data-field="id">文件名</th>
+              <th data-field="name">文件大小</th>
+              <th data-field="price">最后修改时间</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+        {% for keys,values in ossobject.items() %}
+            {% if keys == chdirs %}
+                {% for i in values %}
+          <tr>
+            <td>{{ i.keys()[0] }}</td>
+              {% if i.values()[0][0] >= 1024 and i.values()[0][0] < 1024 * 1024 %}
+                <td>{{ (i.values()[0][0] / 1024) | round(2,'floor') }}KB</td>
+              {% elif i.values()[0][0] >= 1024 * 1024 and i.values()[0][0] < 1024 * 1024 * 1024 %}
+                <td>{{ (i.values()[0][0] / 1024/ 1024)|round(2, 'floor') }}MB</td>
+              {% endif %}
+            <td>{{ i.values()[0][1] }}</td>
+          </tr>
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+        </tbody>
+      </table>
+
+</div>
+
+<script>
+    Dropzone.autoDiscover = false;
+        var dropz = new Dropzone("#file", {
+        　　url: "{{ url_for('main.oss_upfile',path=chdirs) }}",
+        　　addRemoveLinks: true,
+        　　parallelUploads:9,//并行处理多少个文件上传
+        　　uploadMultiple:true,//允许dropzone一次提交多个文件
+        　　maxFiles: 9,//最大可上传的文件个数
+        　　maxFilesize: 500,//MB
+        　　acceptedFiles: ".apk,.ipa,.zip",
+        　　autoProcessQueue: false,//阻止自动上传
+           dictResponseError: '文件上传失败',
+           dictInvalidFileType:"此类型文件无法上传", //如果文件类型错误，提示信息
+           dictRemoveFile: '',
+           dictMaxFilesExceeded:"文件数量过多",
+        　　dictDefaultMessage:"",
+           dictFallbackMessage:"浏览器不受支持",
+        　　dictFileTooBig:"可添加的最大文件大小为{{maxFilesize}}Mb，当前文件大小为{{filesize}}Mb ",
+           init: function(){
+               this.on('addedfile',function(file){
+                   $( '#uploading' ).removeAttr('disabled');
+                   $( '#remove' ).removeAttr('disabled');
+                   $( '#uploading' ).bind( 'click', uploadHandle);
+
+               }),
+               this.on("error",function(file) {
+                      Materialize.toast('Error: 没有权限操作', 5000,'rounded')
+            });
+           },
+
+
+        });
+
+        uploadHandle = function() {
+            　　dropz.processQueue();//开启文件上传
+            　　$( '#uploading' ).unbind( 'click', uploadHandle );
+            };
+
+
+            $("#remove").click(function() {
+                // Delete existing files
+                dropz.removeAllFiles();
+                // Cancel current uploads
+                dropz.removeAllFiles(true);
+
+            });
+
+
+
+      $('.button-collapse').sideNav({
+      menuWidth: 800, // Default is 240
+      edge: 'right', // Choose the horizontal origin
+      closeOnClick: false, // Closes side-nav on <a> clicks, useful for Angular/Meteor
+      draggable: true // Choose whether you can drag to open on touch screens
+    }
+  );
+</script>

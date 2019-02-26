@@ -1,0 +1,318 @@
+ <head>
+      <link href="{{ url_for('static', filename='fonts/fonts.css') }}" rel="stylesheet" />
+      <link type="text/css" rel="stylesheet" href="static/css/materialize.min.css" media="screen,projection" />
+
+      <script type="text/javascript" src="static/js/jquery-2.1.1.min.js"></script>
+      <script type="text/javascript" src="static/js/materialize.min.js"></script> 
+
+	
+     <nav >
+     <div class="nav-wrapper #000000 black">
+      <a href="#!" class="brand-logo center">Web Automation</a>
+      <ul class="right hide-on-med-and-down">
+        {% if current_user.is_authenticated %}
+            <li>用户 : {{ current_user.username }}&emsp;</li>
+            <li><a href="{{ url_for('auth.logout') }}">退出登录</a></li>
+            <li><a></a></i>
+        {% endif %}
+     </ul>
+   </div>
+    </nav>     
+
+
+
+<style> 
+.bor{border:1px dashed #F00;width:300px;height:60px;margin-top:10px} 
+span{display:block}/*css注释说明：让span形成块*/ 
+</style> 
+
+
+</head>
+
+<body>
+
+<div id="test" class="row">
+      <div id="left" class="col s2 ">
+     <ul class="collapsible popout" data-collapsible="accordion">
+    <li>
+     <a href="{{ url_for('.index') }}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">home</i>首页</div></a>
+    </li>
+    <li>
+    <a href="{{ url_for('.checkip') }}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">place </i>I P 查询</div></a>
+    </li>
+
+      <li>
+	<a href="{{ url_for('main.listfile')}}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">swap_vert</i>上传下载</div></a>
+    </li>
+    <li>
+	<a href="{{ url_for('.update')}}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">fiber_new</i>版本更新</div></a>
+    </li>
+
+
+     <li>
+     <div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">cloud_queue</i>资源管理</div>
+      <div class="collapsible-body">
+        <ul class="collection active">
+           <li class="collection-item" style="border:0;">
+               <a href="{{ url_for('main.loadcdn') }}" style="color:#000;">同步CDN</a>
+           </li>
+           <li class="collection-item" style="border:0;">
+               <a href="{{ url_for('main.osslist') }}" style="color:#000;">资源存储</a>
+           </li>
+        </ul>
+     </div>
+    </li>
+
+
+    <li>
+      <div class="collapsible-header active" style="font-weight:bold;background-color:#fff;"><i class="material-icons">computer</i>主机信息</div>
+      <div class="collapsible-body">
+        <ul class="collection active">
+           <li class="collection-item active" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('.hostgroup')}}" style="color:#000;">主机分组</a>
+           </li>
+           <li class="collection-item active" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('.host') }}" style="color:#000;">主机管理</a>
+           </li>
+            <li class="collection-item" style="border:0;">
+	            <a href="{{ url_for('main.datastores') }}" style="color:#000;">数据存储</a>
+	   </li>
+        </ul>
+     </div>
+    </li>
+    <li>
+	      <div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">face</i>用户管理</div>
+      <div class="collapsible-body">
+        <ul class="collection">
+           
+           <li class="collection-item" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('main.users')}}" style="color:#000;">用户列表</a>
+           </li>
+
+	   <li class="collection-item" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('main.role')}}" style="color:#000;">角色管理</a>
+           </li>
+		
+
+           <li class="collection-item" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('main.menu')}}" style="color:#000;">菜单管理</a>
+           </li>
+        </ul>
+     </div>
+    </li>
+         <li>
+        <a href="{{ url_for('.logs')}}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">fiber_new</i>日志审计</div></a>
+    </li>
+  </ul>
+</div>
+
+<div class="col s10">
+
+        <div class="input-field search-wrapper row">
+                <div class="col s7">
+                </div>
+                <form method="get">
+                    <input id="icon_prefix" type="text" name="groupsearch" class="validate col s2" style="display:inline-block;">
+                    <i class="material-icons col s1 prefix" style="display:inline-block;height:42px;line-height:50px;cursor:pointer;">search</i>
+                    <div class="search-results">
+                    </div>
+                </form>
+            </div>
+
+<a href="{{ url_for('.groupadd') }}" class="waves-effect waves-light btn btn-floating blue">添加</a>
+<a class="modal-trigger waves-effect waves-light btn btn-floating red" href="#modal3">删除</a>
+  <!-- Modal Structure -->
+  <div id="modal3" class="modal modal-fixed-footer">
+    <div class="modal-content">
+      <h5>你确定要删除以下所有信息？</h5>
+
+       <table>
+        <thead>
+          <tr>
+              <th data-field="id">ID</th>
+              <th data-field="name">主机组</th>
+          </tr>
+        </thead>
+        <tbody id="mytbody">
+        </tbody>
+      </table>  
+
+
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" onclick="deleteall()">同意</a>
+    </div>
+  </div>
+
+
+
+<table>
+        <thead>
+          <tr>
+              <th>
+                  <input type="checkbox"  name="controlAll" id="all"/>
+                  <label for="all"></label>
+              </th>
+              <th data-field="id">ID</th>
+              <th data-field="groupnames">主机组</th>
+              <th data-field="count">主机数量</th>
+              <th data-field="commnet">备注</th>
+              <th data-field="price">Action</th>
+          </tr>
+        </thead>
+        {% for i in groups %}
+        <tbody id="tbodyall">
+          <tr id="id{{ i.id }}">
+            <td>
+                <input type="checkbox" onclick="getall(this,{{ i.id }})" id="{{ i.id }}" name="selected" id="{{ i.id }}"/>
+                <label for="{{ i.id }}"></label>
+            </td>
+            <td id="groupid{{ i.id }}">{{ i.id }}</td>
+            <td id="groupname{{ i.id }}">{{ i.name }}</td>
+            <td>{{ i.count }}</td>
+            <td>{{ i.comment }}</td>
+            <td><a title="编辑" href="{{ url_for('.editgroup',groupid=i.id) }}"><i class="material-icons">mode_edit</i></a>
+                <a title="删除" href="#modalA{{ i.id }}"><i class="material-icons">delete</i></a>
+            </td>
+                 <div id="modalA{{ i.id }}" class="modal" style="width:700px">
+                    <div class="modal-content">
+                        <h5>你确定要删除此信息？</h5>
+                    </div>
+                <div class="modal-footer">
+                <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" onclick="deleteinfo({{ i.id }})">同意</a>
+                </div>
+              </div>
+          </tr>
+        </tbody>
+      {% endfor %}
+      </table>
+
+<div class="row">
+ <div class="col s4"></div>
+ <ul class="pagination">
+     {% if pagination.has_prev %}
+         <li class="waves-effect"><a href="{{ url_for('.hostgroup',page=pagination.prev_num) }}"><i class="material-icons">chevron_left</i></a></li>
+     {% endif %}
+
+    {% for i in pagination.iter_pages() %}
+        {% if i %}
+            {% if i == pagination.page %}
+                <li class="active"><a href="{{ url_for('.hostgroup',page=i,groupsearch=groupsearch) }}">{{ i }}</a></li>
+            {% else %}
+                <li class="waves-effect"><a href="{{ url_for('.hostgroup',page=i,groupsearch=groupsearch) }}">{{ i }}</a></li>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+
+    {% if pagination.has_next %}
+        <li class="waves-effect"><a href="{{ url_for('.hostgroup',page=pagination.next_num) }}"><i class="material-icons">chevron_right</i></a></li>
+    {% endif %}
+    {%set page_now=pagination.page%}
+    {%set page_count=pagination.pages%}
+
+    <li class="waves-effect">
+        页数({{page_now}}/{{page_count}})
+    </li>
+  </ul>
+ </div>
+</div>
+
+
+<script>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+      {% for i in messages %}
+         Materialize.toast('{{ i }}', 5000,'rounded')
+      {% endfor %}
+  {% endif %}
+{% endwith %}
+
+
+function getall(checkbox,id){
+     var html=[];
+     var groupid=$("#groupid"+id).html()
+     var groupname=$("#groupname"+id).html()
+    if (checkbox.checked == true){
+        html.push('<tr id=t'+ groupid +'>')
+        html.push('<td>' + groupid + '</td>');
+        html.push('<td>' + groupname + '</td>');
+        html.push('</tr>')
+        $('#mytbody').append(html.join(''));
+    }else{
+    $("#t" + id).remove();
+    }
+}
+
+
+    function deleteinfo(id) {
+            var jsondata = {
+                "id": id
+            }
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url: "deletegroup",
+                data: jsondata,
+                async: false,
+                dataType: "json",
+                success: function(data) {
+                    if (data.status == "success") {
+                        $("#id" + id).remove()
+                        window.location.href="{{ url_for('main.hostgroup')}}";
+                    }
+                },
+                error: function(data) {
+                    Materialize.toast('Error: 没有权限操作', 5000,'rounded')
+                },
+            })
+        }
+
+    function deleteall() {
+         $("input[name='selected']").each(function(){    
+                 if($(this).is(":checked")){    
+                     var id= $(this).attr("id");
+                     deleteinfo(id);
+                     }    
+               });
+    }
+
+
+   $(function(){
+    $('input[name="controlAll"]').click(function(){
+            if($(this).is(':checked')){
+                $('input[name="selected"]').each(function(){
+                    $(this).prop("checked",true);
+            });
+        }else{
+            $('input[name="selected"]').each(function(){
+                    $(this).removeAttr("checked",false);
+                });
+        }
+      if($(this).is(':checked')){
+          $('#tbodyall tr').each(function() {
+          var html=[];
+              var id=$(this).children('td').eq(1).html();
+              var names=$(this).children('td').eq(2).html();
+              html.push('<tr id=t'+ id +'>')
+              html.push('<td>' + id + '</td>');
+              html.push('<td>' + names + '</td>');
+              html.push('</tr>')
+        $('#mytbody').append(html.join(''));
+          });
+    }else{
+           $("#mytbody").empty();
+    }
+       });
+   });
+
+$(document).ready(function() {
+    $('select').material_select();
+  });
+        
+
+ $(document).ready(function(){
+    $('.modal').modal();
+  });
+
+</script>
+</body>

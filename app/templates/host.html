@@ -1,0 +1,613 @@
+<head>
+    <link href="{{ url_for('static', filename='fonts/fonts.css') }}" rel="stylesheet" />
+    <link type="text/css" rel="stylesheet" href="static/css/materializecss" media="screen,projection" />
+    <link type="text/css" rel="stylesheet" href="static/css/materialize.min.css" media="screen,projection" />
+
+    <script type="text/javascript" src="static/js/jquery-2.1.1.min.js">    </script>
+    <script type="text/javascript" src="static/js/materialize.js">    </script>
+    <script type="text/javascript" src="static/js/materialize.min.js">   </script>
+    <nav >
+     <div class="nav-wrapper #000000 black">
+      <a href="#!" class="brand-logo center">Web Automation</a>
+      <ul class="right hide-on-med-and-down">
+        {% if current_user.is_authenticated %}
+            <li>用户 : {{ current_user.username }}&emsp;</li>
+            <li><a href="{{ url_for('auth.logout') }}">退出登录</a></li>
+            <li><a></a></i>
+        {% endif %}
+     </ul>
+   </div>
+    </nav>
+
+
+
+
+</head>
+<body>
+<style>
+table{
+
+    table-layout:fixed;
+
+}
+
+table td,th{
+
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+
+}
+
+</style>
+    <div id="test" class="row">
+        <div id="left" class="col s2 ">
+            <ul class="collapsible popout" data-collapsible="accordion">
+                <li>
+                    <a href="{{ url_for('.index') }}" style="color:#000;">
+                        <div class="collapsible-header" style="font-weight:bold;">
+                            <i class="material-icons">
+                                home
+                            </i>
+                            首页
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('.checkip') }}" style="color:#000;">
+                        <div class="collapsible-header" style="font-weight:bold;">
+                            <i class="material-icons">
+                                place
+                            </i>
+                            I P 查询
+                        </div>
+                    </a>
+                </li>
+
+  <li>
+	<a href="{{ url_for('main.listfile')}}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">swap_vert</i>上传下载</div></a>
+    </li>
+
+		    <li>
+        <a href="{{ url_for('.update')}}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">fiber_new</i>版本更新</div></a>
+    </li>
+		<li>
+
+
+      <li>
+     <div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">cloud_queue</i>资源管理</div>
+      <div class="collapsible-body">
+        <ul class="collection active">
+           <li class="collection-item" style="border:0;">
+               <a href="{{ url_for('main.loadcdn') }}" style="color:#000;">同步CDN</a>
+           </li>
+           <li class="collection-item" style="border:0;">
+               <a href="{{ url_for('main.osslist') }}" style="color:#000;">资源存储</a>
+           </li>
+        </ul>
+     </div>
+    </li>
+
+		</li>
+                <li>
+                    <div class="collapsible-header active" style="font-weight:bold;background-color:#fff;"><i class="material-icons">computer</i>主机信息</div>
+                    <div class="collapsible-body">
+                        <ul class="collection active">
+                            <li class="collection-item active" style="background-color:#fff;border:0;">
+                                <a href="{{ url_for('main.hostgroup')}}" style="color:#000;">主机分组</a>
+                            </li>
+                            <li class="collection-item active" style="background-color:#fff;border:0;">
+                                <a href="{{ url_for('main.host') }}" style="color:#000;">主机管理</a>
+                            </li>
+                            <li class="collection-item" style="border:0;">
+	                            <a href="{{ url_for('main.datastores') }}" style="color:#000;">数据存储</a>
+	                        </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+	<div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">face</i>用户管理</div>
+      <div class="collapsible-body">
+        <ul class="collection">
+	    
+           <li class="collection-item" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('main.users')}}" style="color:#000;">用户列表</a>
+           </li>
+
+           <li class="collection-item" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('main.role')}}" style="color:#000;">角色管理</a>
+           </li>
+
+
+           <li class="collection-item" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('main.menu')}}" style="color:#000;">菜单管理</a>
+           </li>
+        </ul>
+     </div>
+                </li>
+
+                     <li>
+        <a href="{{ url_for('.logs')}}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">fiber_new</i>日志审计</div></a>
+    </li>
+            </ul>
+        </div>
+        <div class="col s10">
+            <div class="input-field search-wrapper row">
+                <div class="col s8">
+                </div>
+                <form method="get">
+                        <input id="icon_prefix" type="text" name="hostsearch" class="validate col s2" style="display:inline-block;">
+                        <i class="material-icons col s1 prefix" style="display:inline-block;height:42px;line-height:50px;cursor:pointer;">search</i>
+                    <div class="search-results"></div>
+                </form>
+            </div>
+        <div class="col s10">
+            <a href="#modaladd" class="waves-effect waves-light btn btn-floating blue">添加</a>
+
+            <div id="modaladd" class="modal modal-fixed-footer">
+                <div class="modal-content">
+                    <h4>添加主机</h4>
+      <form id="hostadd" class="col s12" method="post" action="addhost">
+       <div class="row">
+           <div class="col s2"></div>
+           <div class="input-field col s8">
+              <input id="first_name" name="address" type="text" class="validate">
+              <label for="first_name">外网地址</label>
+           </div>
+       </div>
+
+        <div class="row">
+             <div class="col s2"></div>
+            <div class="input-field col s8">
+              <input id="last_name" name="area" type="text" class="validate">
+              <label for="last_name">地区</label>
+            </div>
+        </div>
+
+         <div class="row">
+            <div class="col s2"></div>
+            <div class="input-field col s8">
+              <input id="last_name" name="name" type="text" class="validate">
+              <label for="last_name">用途</label>
+            </div>
+        </div>
+
+       <div class="row">
+           <div class="col s2"></div>
+           <div class="input-field col s8">
+              <select name="add_group" multiple>
+                <option value="" disabled selected></option>
+                {% if groupnames %}
+                    {% for group in groupnames %}
+                        <option value="{{ group.id }}">{{ group.name }}</option>
+                    {% endfor %}
+                {% endif %}
+            </select>
+            <label>选择主机组</label>
+       </div>
+       </div>
+
+         <div class="row">
+            <div class="col s2"></div>
+            <div class="input-field col s8">
+              <input id="last_name" name="nameos" type="text" class="validate">
+              <label for="last_name">系统</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s2"></div>
+            <div class="input-field col s8">
+              <input id="last_name" name="cpu" type="text" class="validate">
+              <label for="last_name">CPU</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s2"></div>
+            <div class="input-field col s8">
+              <input id="last_name" name="memory" type="text" class="validate">
+              <label for="last_name">内存</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s2"></div>
+            <div class="input-field col s8">
+              <input id="last_name" name="net" type="text" class="validate">
+              <label for="last_name">网络</label>
+            </div>
+        </div>
+    </form>
+
+    </div>
+    <div class="modal-footer">
+        <a id="new_ok" class="modal-action modal-close waves-effect waves-green btn-flat ">同意</a>
+    </div>
+ </div>
+
+
+	<a class="modal-trigger waves-effect waves-light btn btn-floating red" href="#modaldd" >删除</a>
+  	<div id="modaldd" class="modal modal-fixed-footer">
+    	<div class="modal-content">
+	         <p>
+            <h5>
+                确定要删除以下所有信息？
+            </h5>
+        </p>
+      <table class="bordered">
+	<thead>
+          <tr>
+              <th data-field="id">ID</th>
+              <th data-field="name">地址</th>
+              <th data-field="name">用途</th>
+              <th data-field="name">地区</th>
+          </tr>
+        </thead>
+        <tbody id="mytbody">
+        </tbody>
+      </table>
+    	</div>
+    	<div class="modal-footer">
+      	<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat " onclick="deleteall()">同意</a>
+    	</div>
+  	</div>
+        </div>
+     <div>
+
+
+
+          <div class="col s10"></div>
+        <a class="waves-effect waves-light btn " style="padding-right:10px" onclick="syncdata()"><i class="material-icons right">cloud</i>同步</a>
+        </div>
+            <table class="bordered">
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" onclick="" name="controlAll" id="all"/>
+                            <label for="all">
+                            </label>
+                        </th>
+                        <th data-field="price">
+                            外网地址
+                        </th>
+                        <th data-field="price">
+                            地区
+                        </th>
+                        <th data-field="price">
+                            用途
+                        </th>
+                        <th data-field="price">
+                            主机组
+                        </th>
+                        <th data-field="price">
+                            CPU
+                        </th>
+                        <th data-field="price">
+                            内存
+                        </th>
+                        <th data-field="price">
+                            网络
+                        </th>
+                        <th data-field="price">
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyall">
+        {% for i in hostinfo %}
+                    <tr id="id{{ i[0].id }}">
+                        <td>
+                            <input type="checkbox" name="selected" id="{{ i[0].id }}" onclick="getall(this,{{ i[0].id }})"/>
+                            <label for="{{ i[0].id }}">
+                            </label>
+                        </td>
+
+                        <td id="netip{{ i[0].id }}" name="aa">
+                            {{ i[0].netip }}
+                        </td>
+                        <td id="area{{ i[0].id }}">
+                            {{i[0].area | default('', true)}}
+                        </td>
+                        <td id="name{{ i[0].id }}">
+                            {{i[0].name | default('', true)}}
+                        </td>
+                        <td id="groupname{{ i[0].id }}">
+                            {{ i.names | default('', true) }}
+                        </td>
+                      
+                        <td id="cpuinfo{{ i[0].id }}">
+                            {{i[0].cpuinfo | default('', true)}}核
+                        </td>
+                        <td id="memory{{ i[0].id }}">
+                            {{i[0].memory | default('', true)}}M
+                        </td>
+                        <td id="internet{{ i[0].id }}">
+                            {{i[0].internet | default('', true)}}M
+                        </td>
+                        <td>
+                            <a title="连接" href="{{ url_for('main.websshs',ID=i[0].netip) }}" target="_blank"><i class="material-icons">link</i></a>
+                            <a title="编辑" href="#modal{{ i[0].id }}"><i class="material-icons">mode_edit</i></a>
+                            <div id="modal{{ i[0].id }}" class="modal">
+                                <div class="modal-content">
+                                    <div class="row">
+                                        <form class="col s12" method="post" id="hostinfos{{ i[0].id }}">
+                                            <div class="row">
+                                                <div class="input-field col s12">
+                                                    <input type="text" readonly="true" name="ids" value='{{ i[0].id }}' class="validate">
+                                                    <label for="email">
+                                                        I D
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="input-field col s12">
+                                                    <input type="text" name="netips" value='{{ i[0].netip }}' class="validate">
+                                                    <label for="password">
+                                                        外网地址
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="input-field col s12">
+                                                    <input type="text" name="osnames" value='{{ i[0].osname }}' class="validate">
+                                                    <label for="email">
+                                                        系统
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="input-field col s12">
+                                                    <input type="text" name="cpuinfos" value='{{ i[0].cpuinfo}}' class="validate">
+                                                    <label for="email">
+                                                        CPU
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="input-field col s12">
+                                                    <input type="text" name="memorys" value='{{ i[0].memory }}' class="validate">
+                                                    <label for="email">
+                                                        内存
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="input-field col s12">
+                                                    <input type="text" name="internets" value='{{ i[0].internet }}' class="validate">
+                                                    <label for="email">
+                                                        网络
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="input-field col s12">
+                                                    <input type="text" name="names" value='{{ i[0].name }}' class="validate">
+                                                    <label for="email">
+                                                        用途
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="input-field col s12">
+                                                    <input type="text" name="areas" value='{{ i[0].area }}' class="validate">
+                                                    <label for="email">
+                                                        地区
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" onclick="chagedata(hostinfos{{ i[0].id }},{{ i[0].id }})">同意</a>
+                            	    </div>
+                           </div>
+                            <a title="删除" href="#modal{{ i[0].id }}A"><i class="material-icons">delete</i></a>
+                        </td>
+                    </tr>
+		            <div id="modal{{ i[0].id }}A" class="modal" style="width:700px">
+                                <div class="modal-content">
+                                    <p>
+                                        <h5>
+                                            确定要删除此信息？
+                                        </h5>
+                                    </p>
+                                </div>
+                                <div class="modal-footer">
+                                    <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat"
+                                    onclick="deleteinfo({{ i[0].id }})">
+                                        同意
+                                    </a>
+                                </div>
+                            </div>
+                {%endfor%}
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="col l2"></div>
+                <ul class="pagination center col l6" style="margin-top:30px;">
+                    {%if pagination.has_prev%}
+                    <li class="waves-effect">
+                        <a href="{{ url_for('.host',page=pagination.prev_num) }}">
+                            <i class="material-icons">
+                                chevron_left
+                            </i>
+                        </a>
+                    </li>
+                    {%endif%}
+		    {%set page_now=pagination.page%}
+		    {%set page_count=pagination.pages%}
+            {%for i in pagination.iter_pages()%}
+		        {% if i %}
+			        {%if i==pagination.page%}
+                        <li class="waves-effect active"><a href="{{ url_for('.host',page=i,hostsearch=subinfo) }}">{{ i }}</a></li>
+                    {%else%}
+                        <li class="waves-effect"><a href="{{ url_for('.host',page=i,hostsearch=subinfo) }}">{{ i }}</a></li>
+                    {%endif%}
+			    {%endif%}
+		    {%endfor%}
+		    {%if pagination.has_next%}
+                    <li class="waves-effect">
+                        <a href="{{ url_for('.host',page=pagination.next_num) }}">
+                            <i class="material-icons">
+                                chevron_right
+                            </i>
+                        </a>
+                    </li>
+                    {%endif%}
+                    <li class="waves-effect">
+                        页数({{page_now}}/{{page_count}})
+                    </li>
+                </ul>
+                <div class="col l2">
+                </div>
+            </div>
+        </div>
+    </div>
+<script type="text/javascript">
+
+  $(document).ready(function() {
+    $('select').material_select();
+  });
+
+$(function(){
+    $("#new_ok").click(function(){
+        $("#hostadd").submit();
+            });
+});
+
+
+   function getall(checkbox,id){
+     var html=[];
+     var ip=$("#netip"+id).html()
+     var area=$("#name"+id).html()
+     var names=$("#area"+id).html()
+    if (checkbox.checked == true){
+	html.push('<tr id=t'+ id +'>')
+        html.push('<td>' + id + '</td>');
+        html.push('<td>' + ip + '</td>');
+        html.push('<td>' + names + '</td>');
+        html.push('<td>' + area + '</td>');
+        html.push('</tr>')
+        $('#mytbody').append(html.join(''));
+    }else{
+	$("#t" + id).remove();
+    }
+}
+
+	function deleteall() {
+	     $("input[name='selected']").each(function(){    
+                 if($(this).is(":checked")){    
+                     var id= $(this).attr("id");
+		     deleteinfo(id);
+                     }    
+               });
+	}
+	
+
+        function deleteinfo(id) {
+            var jsondata = {
+                "id": id
+            }
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "deletehost",
+                data: jsondata,
+                async: false,
+                dataType: "json",
+                success: function(data) {
+                    if (data.status == "success") {
+                        $("#id" + id).remove()
+                    }
+                },
+                error: function() {
+                    Materialize.toast('Error: 没有权限操作', 5000,'rounded')
+                },
+            })
+        }
+
+        function chagedata(id,ids) {
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "edithost",
+                data: $(id).serialize(),
+                async: false,
+                success: function(data) {
+                    $("#netip" + ids).text(data.netip);
+                    $("#osname" + ids).text(data.osname);
+                    $("#cpuinfo" + ids).text(data.cpuinfo);
+                    $("#memory" + ids).text(data.memory);
+                    $("#internet" + ids).text(data.internet);
+                    $("#name" + ids).text(data.name);
+                    $("#area" + ids).text(data.area);
+                },
+                error: function() {
+                    Materialize.toast('Error: 没有权限操作', 5000,'rounded')
+                },
+            })
+        }
+        $(document).ready(function() {
+            $('.modal').modal()
+        });
+
+	
+   $(function(){
+	$('input[name="controlAll"]').click(function(){  
+            if($(this).is(':checked')){  
+                $('input[name="selected"]').each(function(){  
+                    $(this).prop("checked",true);  
+            });  
+        }else{  
+            $('input[name="selected"]').each(function(){  
+                    $(this).removeAttr("checked",false);  
+                });  
+        } 
+      if($(this).is(':checked')){  
+          $('#tbodyall tr').each(function() {
+	      var html=[];
+              var id=$(this).children('td').eq(1).html();
+              var ip=$(this).children('td').eq(2).html();
+              var names=$(this).children('td').eq(4).html();
+              var area=$(this).children('td').eq(3).html();
+	        html.push('<tr id=t'+ id +'>')
+            html.push('<td>' + id + '</td>');
+            html.push('<td>' + ip + '</td>');
+            html.push('<td>' + names + '</td>');
+            html.push('<td>' + area + '</td>');
+            html.push('</tr>') 
+	    $('#mytbody').append(html.join(''));
+          });
+	}else{
+	       $("#mytbody").empty();
+	}
+       });
+   });
+
+   function syncdata() {
+       $.ajax({
+                cache: false,
+                type: "POST",
+                url: "sync_data",
+                async: false,
+            success: function(data) {
+                window.location.href="{{ url_for('main.host') }}";
+                },
+           error: function() {
+                    Materialize.toast('Error: 没有权限操作', 5000,'rounded')
+                },
+
+            })
+   }
+   {% with messages = get_flashed_messages() %}
+  {% if messages %}
+      {% for i in messages %}
+         Materialize.toast('{{ i }}', 5000,'rounded')
+      {% endfor %}
+  {% endif %}
+{% endwith %}
+ 
+    </script>
+</body>

@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% block test %}
+
+<div class="row">
+    <div class="col s6" id="container" style="min-width:400px;height:400px"></div>
+    <div class="col s6" id="containers" style="min-width:400px;height:400px"></div>
+</div>
+
+      <div class="col s4">
+       <ul class="collection with-header">
+           <li class="collection-header"><h4>主机总数</h4></li>
+           <li class="collection-item"><h5><a href="{{ url_for('main.host') }}">{{ host_count }}</a><h5></li>
+      </ul>
+      </div>
+
+      <div class="col s4">
+       <ul class="collection with-header">
+           <li class="collection-header"><h4>用户总数</h4></li>
+           <li class="collection-item"><h5><a href="{{ url_for('main.users')}}">{{ user_count }}</a><h5></li>
+      </ul>
+      </div>
+
+
+      <div class="col s4">
+       <ul class="collection with-header">
+           <li class="collection-header"><h4>在线用户</h4></li>
+           <li class="collection-item"><h5><a>{{ onlien_user_count }}</a><h5></li>
+      </ul>
+      </div>
+
+
+</div>
+
+<script>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+      {% for i in messages %}
+         Materialize.toast('{{ i }}', 5000,'rounded')
+      {% endfor %}
+  {% endif %}
+{% endwith %}
+
+$(function () {
+    $('#container').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        credits: {
+            enabled: false
+        },
+
+        exporting:{
+            enabled:false
+        },
+        title: {
+            text: '服务器地区使用量占比'
+        },
+        tooltip: {
+            headerFormat: '{series.name}<br>',
+            pointFormat: '{point.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                },
+                showInLegend: true
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: '地区:',
+            data: [
+                {% for key,values in grouping_host_count.items() %}
+                    ['{{ key }}', {{ values }}],
+                {% endfor %}
+
+        ]
+        }]
+    });
+});
+
+
+$(function () {
+
+ Highcharts.setOptions({
+        lang: {
+            numericSymbols: ['k' , 'M' , 'G' , 'T' , 'P' , 'E'],
+        },
+    }),
+
+ Highcharts.chart('containers', {
+     plotOptions: {
+                    column:{
+                        dataLabels:{
+                            enabled:true, // dataLabels设为true
+                            style:{
+                                color:'#D7DEE9'
+                            }
+                        }
+                    }
+      },
+
+     credits:{
+            enabled: false
+        },
+    exporting: {
+         enabled: false
+    },
+	chart: {
+		type: 'column',
+        alignTicks: false
+	},
+	title: {
+		text: 'CDN流量使用排名（7天）'
+	},
+    yAxis: {
+            labels: {
+
+            },
+            title: {
+                text: ''
+            }
+        },
+        legend: {
+            enabled: false
+        },
+     xAxis: {
+         categories:
+            [{% for key,values in domain_ranping.items() %}
+                "{{ key }}",
+            {% endfor %}]
+	},
+
+	series: [{
+        showInLegend: false,
+		name: '总流量使用',
+		data: [
+            {% for key,values in domain_ranping.items() %}
+            [{{ values }}],
+            {% endfor %}
+        ]
+	}],
+	responsive: {
+		rules: [{
+			condition: {
+				maxWidth: 500
+			},
+			// Make the labels less space demanding on mobile
+			chartOptions: {
+				xAxis: {
+					labels: {
+						formatter: function () {
+							return this.value
+						}
+					}
+				},
+				yAxis: {
+					labels: {
+						align: 'left',
+						x: 0,
+						y: -2
+					},
+					title: {
+						text: ''
+					}
+				}
+			}
+		}]
+	}
+});
+ });
+function setSize(width) {
+	chart.setSize(width, 300);
+}
+
+
+
+</script>
+{% endblock %}

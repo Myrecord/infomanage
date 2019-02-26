@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% block test %}
+
+
+
+<style> 
+.bor{border:1px dashed #F00;width:300px;height:60px;margin-top:10px} 
+span{display:block}/*css注释说明：让span形成块*/ 
+</style> 
+
+
+<div class="col s10">
+
+        <div class="input-field search-wrapper row">
+                <div class="col s8">
+                </div>
+                <form method="get">
+                        <input id="icon_prefix" type="text" name="filesearch" class="validate col s2" style="display:inline-block;">
+                        <i class="material-icons col s1 prefix" style="display:inline-block;height:42px;line-height:50px;cursor:pointer;">search</i>
+                    <div class="search-results">
+                    </div>
+                </form>
+            </div>
+<a href="#" data-activates="slide-out" class="button-collapse waves-effect waves-light btn btn-floating  blue">上传</a>
+<div id="slide-out" class="side-nav">
+    <p>
+    <h5>上传文件(Server)</h5>
+    <hr>
+    <p>
+    <div class="field">
+        <div id="file" class="dropzone" style="border: 2px dashed #e1c2f7;margin: 5%;height: 60%;">
+            <div class="dz-message" data-dz-message style="margin:15em 0">将文件拖拽此处或<b style="color:#829aff">点击上传</b></div>
+        </div>
+    </div>
+    <div class="col s3"></div>
+    <div class="col s3">
+     <a id='uploading' class="waves-effect waves-light btn buttons" disabled="true"><i class="material-icons left">file_upload</i>上传</a>
+    </div>
+    <div class="col s3">
+        <a id='remove' class="waves-effect waves-light btn buttons" disabled="true"><i class="material-icons left">clear</i>清空</a>
+    </div>
+</div>
+        
+        <table class="highlight">
+                <thead>
+                  <tr>
+                      <th data-field="id">文件名称</th>
+                      <th data-field="name">Action</th>
+                  </tr>
+                </thead>
+        
+                <tbody>
+                {% for i in files_list %}
+                  <tr>
+                    <td>{{ i.name }}</td>
+                    <td>
+                        <a title="下载" href="{{ url_for('main.downfile', filename=i.name ) }}"><i class="material-icons">file_download</i></a>
+                        <a title="删除" href="{{ url_for('main.filedel', filename=i.name ,file_id=i.id) }}"><i class="material-icons">delete</i></a></td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            
+            <div class="row">
+              <div class="col s4"></div>
+              <ul class="pagination">
+              {%if pagination.has_prev%}
+                    <li class="disabled"><a href="{{ url_for('main.listfile',page=pagination.prev_num) }}"><i class="material-icons">chevron_left</i></a></li>
+              {% endif %}
+
+              {%set page_now=pagination.page%}
+              {%set page_count=pagination.pages%}
+
+              {%for i in pagination.iter_pages()%}
+                  {% if i %}
+                      {% if i==pagination.page %}
+                       <li class="waves-effect"><a href="{{ url_for('main.listfile',page=i) }}">{{ i }}</a></li>
+                      {% else %}
+                       <li class="waves-effect"><a href="{{ url_for('main.listfile',page=i) }}">{{ i }}</a></li>
+                      {% endif %}
+                   {% endif %}
+                {% endfor %}
+                {%if pagination.has_next %}
+                    <li class="waves-effect"><a href="{{ url_for('main.listfile',page=pagination.next_num) }}"><i class="material-icons">chevron_right</i></a></li>
+                {% endif %}
+
+                <li class="waves-effect">
+                        页数({{page_now}}/{{page_count}})
+                </li>
+
+            </ul>
+            </div>
+</div>
+
+
+
+
+<script>
+   {% with messages = get_flashed_messages() %}
+  {% if messages %}
+      {% for i in messages %}
+         Materialize.toast('{{ i }}', 5000,'rounded')
+      {% endfor %}
+  {% endif %}
+{% endwith %}
+
+
+$(function(){
+    $("#downfiles").click(function(){
+        $.ajax({
+             type:'post',
+             url:'downfile',
+             data:$("#filedowns").serialize(),
+             cache:true, 
+             async:false,
+             dataType:'html',
+             success:function(data){
+                 alert('111111');
+             },
+             error:function(data){
+                 alert('222222');
+             },
+        });
+    });
+})
+
+ Dropzone.autoDiscover = false;
+        var dropz = new Dropzone("#file", {
+        　　url: "fileload",
+        　　addRemoveLinks: true,
+        　　parallelUploads:10,//并行处理多少个文件上传
+        　　uploadMultiple:true,//允许dropzone一次提交多个文件
+        　　maxFiles: 10,//最大可上传的文件个数
+        　　maxFilesize: 10,//MB
+        　　acceptedFiles: ".xlsx,.zip,.xls,.tar,.pub,.txt",
+        　　autoProcessQueue: false,//阻止自动上传
+           dictResponseError: '文件上传失败',
+           dictInvalidFileType:"此类型文件无法上传", //如果文件类型错误，提示信息
+           dictRemoveFile: '',
+           dictMaxFilesExceeded:"文件数量过多",
+        　　dictDefaultMessage:"",
+           dictFallbackMessage:"浏览器不受支持",
+        　　dictFileTooBig:"可添加的最大文件大小为{{maxFilesize}}Mb，当前文件大小为{{filesize}}Mb ",
+           init: function(){
+               this.on('addedfile',function(file){
+                   $( '#uploading' ).removeAttr('disabled');
+                   $( '#remove' ).removeAttr('disabled');
+                   $( '#uploading' ).bind( 'click', uploadHandle);
+
+               }),
+               this.on("queuecomplete",function(file) {
+                       window.location.href = "{{ url_for('main.listfile') }}"
+            }),
+               this.on("error",function(file) {
+                      Materialize.toast('Error: 没有权限操作', 5000,'rounded')
+            });
+           },
+
+        });
+
+        uploadHandle = function() {
+            　　dropz.processQueue();//开启文件上传
+            　　$( '#uploading' ).unbind( 'click', uploadHandle );
+            };
+
+
+            $("#remove").click(function() {
+                // Delete existing files
+                dropz.removeAllFiles();
+                // Cancel current uploads
+                dropz.removeAllFiles(true);
+
+            });
+
+
+  $('.button-collapse').sideNav({
+  menuWidth: 800, // Default is 240
+  edge: 'right', // Choose the horizontal origin
+  closeOnClick: false, // Closes side-nav on <a> clicks, useful for Angular/Meteor
+  draggable: true // Choose whether you can drag to open on touch screens
+});
+
+
+</script>
+{% endblock %}

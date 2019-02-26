@@ -1,0 +1,96 @@
+<html>
+    <head>
+      <link rel="stylesheet" href="{{ url_for('static', filename='xterm/xterm.css') }}" />
+        <link href="{{ url_for('static', filename='fonts/fonts.css') }}" rel="stylesheet" />
+      <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/materialize.min.css') }}"  media="screen,projection"/>
+
+      <script type="text/javascript" src="static/js/jquery-2.1.1.min.js"></script>
+      <script src="{{ url_for('static',filename='xterm/xterm.js') }}"></script>
+      <script src="{{ url_for('static',filename='xterm/addons/attach/attach.js') }}"></script>
+      <script type="text/javascript" src="static/js/materialize.min.js"></script>
+
+
+   <style>
+    body {
+      width: 100%;
+      height: 100%;
+    }
+    body {
+      background: #000;
+    }
+    #container{
+      height:100%
+    }
+    #terminal-container {
+      position: absolute;
+      left:0;
+      top:40px;
+      bottom:0;
+      right: 0;
+      padding: 5px;
+    }
+    #terminal-container .terminal {
+      background-color: #000;
+      color: #fafafa;
+    }
+    .header a {
+        color: #fff;
+    }
+
+    .header .tit{
+      text-align: center;
+      text-indent: -10%;
+    }
+
+    ::-webkit-scrollbar {
+        width: 14px;
+        height: 14px;
+    }
+    ::-webkit-scrollbar-corner {
+        background-color: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+        height: 6px;
+        border-radius: 7px;
+        border: 4px solid transparent;
+        background-color: #ddd;
+        background-clip: padding-box;
+    }
+     .main{
+    text-align: center; /*让div内部文字居中*/
+    background-color: #fff;
+    border-radius: 50px;
+    width: 400px;
+    height: 500px;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+  </style>
+  </head>
+<body>
+     <div id="terminal"></div>
+      <script>
+
+        var term = new Terminal({
+        cols: 120,
+        rows: 90,
+        cursorBlink: true,
+        });
+
+        term.open(document.getElementById('#terminal'));
+        socket = new WebSocket('ws://192.168.3.73:5000/echo');
+        term.attach(socket);
+        socket.onclose = function () {
+            term.writeln("连接已断开.")
+    };
+
+
+
+      </script>
+    </body>
+</html>

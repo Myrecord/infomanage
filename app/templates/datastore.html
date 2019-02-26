@@ -1,0 +1,329 @@
+<head>
+    <link href="{{ url_for('static', filename='fonts/fonts.css') }}" rel="stylesheet" />
+    <link type="text/css" rel="stylesheet" href="static/css/materializecss" media="screen,projection" />
+    <link type="text/css" rel="stylesheet" href="static/css/materialize.min.css" media="screen,projection" />
+
+    <script type="text/javascript" src="static/js/jquery-2.1.1.min.js">    </script>
+    <script type="text/javascript" src="static/js/materialize.js">    </script>
+    <script type="text/javascript" src="static/js/materialize.min.js">    </script>
+
+    <nav >
+     <div class="nav-wrapper #000000 black">
+      <a href="#!" class="brand-logo center">Web Automation</a>
+      <ul class="right hide-on-med-and-down">
+        {% if current_user.is_authenticated %}
+            <li>用户 : {{ current_user.username }}&emsp;</li>
+            <li><a href="{{ url_for('auth.logout') }}">退出登录</a></li>
+            <li><a></a></i>
+        {% endif %}
+     </ul>
+   </div>
+    </nav>
+</head>
+
+
+<div id="test" class="row">
+      <div id="left" class="col s2 ">
+     <ul class="collapsible popout" data-collapsible="accordion">
+    <li>
+     <a href="{{ url_for('.index') }}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">home</i>首页</div></a>
+    </li>
+    <li>
+    <a href="{{ url_for('.checkip') }}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">place </i>I P 查询</div></a>
+    </li>
+
+           <li>
+	<a href="{{ url_for('main.listfile')}}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">swap_vert</i>上传下载</div></a>
+    </li>
+
+    <li>
+	<a href="{{ url_for('.update')}}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">fiber_new</i>版本更新</div></a>
+    </li>
+
+     <li>
+     <div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">cloud_queue</i>资源管理</div>
+      <div class="collapsible-body">
+        <ul class="collection active">
+           <li class="collection-item" style="border:0;">
+               <a href="{{ url_for('main.loadcdn') }}" style="color:#000;">同步CDN</a>
+           </li>
+           <li class="collection-item" style="border:0;">
+               <a href="{{ url_for('main.osslist') }}" style="color:#000;">资源存储</a>
+           </li>
+        </ul>
+     </div>
+    </li>
+
+
+    <li>
+      <div class="collapsible-header active" style="font-weight:bold;background-color:#fff;"><i class="material-icons">computer</i>主机信息</div>
+      <div class="collapsible-body">
+        <ul class="collection active">
+           <li class="collection-item active" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('.hostgroup')}}" style="color:#000;">主机分组</a>
+           </li>
+           <li class="collection-item active" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('.host') }}" style="color:#000;">主机管理</a>
+           </li>
+            <li class="collection-item" style="border:0;">
+	            <a href="{{ url_for('main.datastores') }}" style="color:#000;">数据存储</a>
+	   </li>
+        </ul>
+     </div>
+    </li>
+    <li>
+	      <div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">face</i>用户管理</div>
+      <div class="collapsible-body">
+        <ul class="collection">
+
+           <li class="collection-item" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('main.users')}}" style="color:#000;">用户列表</a>
+           </li>
+
+	   <li class="collection-item" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('main.role')}}" style="color:#000;">角色管理</a>
+           </li>
+
+
+           <li class="collection-item" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('main.menu')}}" style="color:#000;">菜单管理</a>
+           </li>
+        </ul>
+     </div>
+    </li>
+         <li>
+        <a href="{{ url_for('.logs')}}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">fiber_new</i>日志审计</div></a>
+    </li>
+  </ul>
+</div>
+
+
+<div class="col s10">
+
+        <div class="input-field search-wrapper row">
+                <div class="col s7">
+                </div>
+                <form method="get">
+                    <input id="icon_prefix" type="text" name="datasearch" class="validate col s2" style="display:inline-block;">
+                    <i class="material-icons col s1 prefix" style="display:inline-block;height:42px;line-height:50px;cursor:pointer;">search</i>
+                    <div class="search-results">
+                    </div>
+                </form>
+            </div>
+<a href="#modaladd" class="waves-effect waves-light btn btn-floating blue">添加</a>
+    <div id="modaladd" class="modal">
+            <div class="modal-content"><div class="row">
+                    <form class="col s12" id="newdatas" action="{{ url_for('main.adddatas') }}" method="post">
+                       <div class="row">
+                        <div class="input-field col s6">
+                          <input id="first_name" name="ids" type="hidden" value="" class="validate">
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="input-field col s6">
+                          <input id="first_name" name="netip" type="text" value="" class="validate">
+                          <label for="first_name">地址</label>
+                        </div>
+                        <div class="input-field col s6">
+                          <input id="last_name" name="port" type="text" value="" class="validate">
+                          <label for="last_name">端口</label>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="input-field col s6">
+                          <input id="last_name" name="types" type="text" value="" class="validate">
+                          <label for="last_name">类型</label>
+                        </div>
+                         <div class="input-field col s6">
+                          <input id="last_name" name="version" type="text" value="" class="validate">
+                          <label for="last_name">版本</label>
+                        </div>
+                        <div class="input-field col s6">
+                          <input id="last_name" name="name" type="text" value="" class="validate">
+                          <label for="last_name">用途</label>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="input-field col s6">
+                          <input id="last_name" name="cpu" type="text" value="" class="validate">
+                          <label for="last_name">CPU</label>
+                        </div>
+                        <div class="input-field col s6">
+                          <input id="last_name" name="memory" type="text" value="" class="validate">
+                          <label for="last_name">内存</label>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="input-field col s6">
+                          <input id="last_name" name="area" type="text" value="" class="validate">
+                          <label for="last_name">地区</label>
+                        </div>
+                        <div class="input-field col s6">
+                          <input id="last_name" name="connect_number" type="text" value="" class="validate">
+                          <label for="last_name">连接数</label>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+            </div>
+            <div class="modal-footer">
+              <a id="new_datas"  class="modal-action modal-close waves-effect waves-green btn-flat">同意</a>
+            </div>
+         </div>
+<table>
+        <thead>
+          <tr>
+              <th data-field="name">地址</th>
+              <th data-field="price">端口</th>
+              <th data-field="price">版本</th>
+              <th data-field="price">用途</th>
+              <th data-field="price">CPU</th>
+              <th data-field="price">内存(M)</th>
+              <th data-field="price">地区</th>
+              <th data-field="price">连接数</th>
+              <th data-field="price">Action</th>
+
+          </tr>
+        </thead>
+
+        <tbody>
+        {% for datainfo in datainfo %}
+          <tr>
+            <td>{{ datainfo.netip| default('', true) }}</td>
+                <td>{{ datainfo.port| default('', true) }}</td>
+                <td>{{ datainfo.types| default('', true) }}{{ datainfo.version| default('', true) }}</td>
+                <td>{{ datainfo.name| default('', true) }}</td>
+                <td>{{ datainfo.cpu| default('', true) }}</td>
+                <td>{{ datainfo.memory| default('', true) }}</td>
+                <td>{{ datainfo.area| default('', true) }}</td>
+                <td>{{ datainfo.connect_number| default('', true) }}</td>
+                <td>
+                    <a href="#modale{{ datainfo.id }}"><i class="material-icons">mode_edit</i></a>
+                     <div id="modale{{ datainfo.id }}" class="modal">
+                        <div class="modal-content"><div class="row">
+                                <form class="col s12" id="newdata{{ datainfo.id }}" action="{{ url_for('main.editdatas') }}" method="post">
+                                   <div class="row">
+                                    <div class="input-field col s6">
+                                      <input id="first_name" name="ids" type="hidden" value="{{ datainfo.id| default('', true)  }}" class="validate">
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="input-field col s6">
+                                      <input id="first_name" name="netip" type="text" value="{{ datainfo.netip| default('', true) }}" class="validate">
+                                      <label for="first_name">地址</label>
+                                    </div>
+                                    <div class="input-field col s6">
+                                      <input id="last_name" name="port" type="text" value="{{ datainfo.port| default('', true)}}" class="validate">
+                                      <label for="last_name">端口</label>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="input-field col s6">
+                                      <input id="last_name" name="types" type="text" value="{{ datainfo.types| default('', true)}}" class="validate">
+                                      <label for="last_name">类型</label>
+                                    </div>
+                                     <div class="input-field col s6">
+                                      <input id="last_name" name="version" type="text" value="{{ datainfo.version| default('', true)}}" class="validate">
+                                      <label for="last_name">版本</label>
+                                    </div>
+                                    <div class="input-field col s6">
+                                      <input id="last_name" name="name" type="text" value="{{ datainfo.name| default('', true)}}" class="validate">
+                                      <label for="last_name">用途</label>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="input-field col s6">
+                                      <input id="last_name" name="cpu" type="text" value="{{ datainfo.cpu| default('', true) }}" class="validate">
+                                      <label for="last_name">CPU</label>
+                                    </div>
+                                    <div class="input-field col s6">
+                                      <input id="last_name" name="memory" type="text" value="{{ datainfo.memory| default('', true) }}" class="validate">
+                                      <label for="last_name">内存</label>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="input-field col s6">
+                                      <input id="last_name" name="area" type="text" value="{{ datainfo.area| default('', true)}}" class="validate">
+                                      <label for="last_name">地区</label>
+                                    </div>
+                                    <div class="input-field col s6">
+                                      <input id="last_name" name="connect_number" type="text" value="{{ datainfo.connect_number| default('', true)}}" class="validate">
+                                      <label for="last_name">连接数</label>
+                                    </div>
+                                  </div>
+                                </form>
+                              </div>
+                        </div>
+                        <div class="modal-footer">
+                          <a id="editdata{{ datainfo.id }}" onclick="subdata({{ datainfo.id }})" class="modal-action modal-close waves-effect waves-green btn-flat">同意</a>
+                        </div>
+                     </div>
+
+                    <a href="#modald{{ datainfo.id }}"><i class="material-icons">delete</i></a>
+                     <div id="modald{{ datainfo.id }}" class="modal">
+                        <div class="modal-content">
+                          <h4>删除此条记录：{{ datainfo.name }}?</h4>
+                        </div>
+                        <div class="modal-footer">
+                          <a href="{{ url_for('main.deldatas',ids = datainfo.id) }}" class="modal-action modal-close waves-effect waves-green btn-flat">同意</a>
+                        </div>
+                     </div>
+
+                </td>
+          </tr>
+        {%  endfor %}
+        </tbody>
+      </table>
+<div class="row">
+  <div class="col s4"></div>
+        <ul class="pagination">
+                      {%if pagination.has_prev%}
+                            <li class="disabled"><a href="{{ url_for('main.datastores',page=pagination.prev_num) }}"><i class="material-icons">chevron_left</i></a></li>
+                      {% endif %}
+
+                      {%set page_now=pagination.page%}
+                      {%set page_count=pagination.pages%}
+
+                      {%for i in pagination.iter_pages()%}
+                          {% if i %}
+                              {% if i==pagination.page %}
+                               <li class="waves-effect"><a href="{{ url_for('main.datastores',page=i) }}">{{ i }}</a></li>
+                              {% else %}
+                               <li class="waves-effect"><a href="{{ url_for('main.datastores',page=i) }}">{{ i }}</a></li>
+                              {% endif %}
+                           {% endif %}
+                        {% endfor %}
+                        {%if pagination.has_next %}
+                            <li class="waves-effect"><a href="{{ url_for('main.datastores',page=pagination.next_num) }}"><i class="material-icons">chevron_right</i></a></li>
+                        {% endif %}
+
+                        <li class="waves-effect">
+                                页数({{page_now}}/{{page_count}})
+                        </li>
+
+        </ul>
+<script>
+
+    {% with messages = get_flashed_messages() %}
+  {% if messages %}
+      {% for i in messages %}
+         Materialize.toast('{{ i }}', 5000,'rounded')
+      {% endfor %}
+  {% endif %}
+{% endwith %}
+
+function subdata(id) {
+    $("#editdata"+id).click(function () {
+        $("#newdata"+id).submit();
+    });
+}
+
+  $("#new_datas").click(function () {
+        $("#newdatas").submit();
+    });
+     $(document).ready(function(){
+        $('.modal').modal();
+  });
+
+</script>
+</div>

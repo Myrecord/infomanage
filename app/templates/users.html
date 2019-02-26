@@ -1,0 +1,256 @@
+ <head>
+       <link href="{{ url_for('static', filename='fonts/fonts.css') }}" rel="stylesheet" />
+       <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/materialize.min.css') }}"  media="screen,projection"/>
+
+      <script type="text/javascript" src="{{ url_for('static',filename='js/jquery-2.1.1.min.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static',filename='js/materialize.min.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static',filename='validation/jquery.validate.min.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static',filename='validation/messages_zh.js') }}"></script>
+
+
+    <nav >
+     <div class="nav-wrapper #000000 black">
+      <a href="#!" class="brand-logo center">Web Automation</a>
+      <ul class="right hide-on-med-and-down">
+        {% if current_user.is_authenticated %}
+            <li>用户 : {{ current_user.username }}&emsp;</li>
+            <li><a href="{{ url_for('auth.logout') }}">退出登录</a></li>
+            <li><a></a></i>
+        {% endif %}
+     </ul>
+   </div>
+    </nav>
+
+
+<style> 
+.bor{border:1px dashed #F00;width:300px;height:60px;margin-top:10px} 
+span{display:block}/*css注释说明：让span形成块*/ 
+</style> 
+
+<style type="text/css">
+
+    label.error {
+    padding-left: 16px;
+    padding-bottom: 2px;
+    font-weight: bold;
+    left: 10rem;
+    
+}
+.input-field.col label {
+    left: 10rem;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="test" class="row">
+      <div id="left" class="col s2 ">
+     <ul class="collapsible popout" data-collapsible="accordion">
+    <li>
+     <a href="{{ url_for('.index') }}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">home</i>首页</div></a>
+    </li>
+    <li>
+    <a href="{{ url_for('.checkip') }}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">place </i>I P 查询</div></a>
+    </li>
+
+      <li>
+	<a href="{{ url_for('main.listfile')}}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">swap_vert</i>上传下载</div></a>
+    </li>
+
+    <li>
+	<a href="{{ url_for('.update')}}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">fiber_new</i>版本更新</div></a>
+    </li>
+
+     <li>
+     <div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">cloud_queue</i>资源管理</div>
+      <div class="collapsible-body">
+        <ul class="collection active">
+           <li class="collection-item" style="border:0;">
+               <a href="{{ url_for('main.loadcdn') }}" style="color:#000;">同步CDN</a>
+           </li>
+           <li class="collection-item" style="border:0;">
+               <a href="{{ url_for('main.osslist') }}" style="color:#000;">资源存储</a>
+           </li>
+        </ul>
+     </div>
+    </li>
+
+
+    <li>
+      <div class="collapsible-header" style="font-weight:bold;background-color:#fff;"><i class="material-icons">computer</i>主机信息</div>
+      <div class="collapsible-body">
+        <ul class="collection active">
+           <li class="collection-item" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('.hostgroup')}}" style="color:#000;">主机分组</a>
+           </li>
+           <li class="collection-item" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('.host') }}" style="color:#000;">主机管理</a>
+           </li>
+            <li class="collection-item" style="border:0;">
+	       <a href="{{ url_for('main.datastores') }}" style="color:#000;">数据存储</a>
+	   </li>
+        </ul>
+     </div>
+    </li>
+    <li>
+      <div class="collapsible-header active" style="font-weight:bold;"><i class="material-icons">face</i>用户管理</div>
+      <div class="collapsible-body">
+        <ul class="collection active">
+
+            <li class="collection-item" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('main.users')}}" style="color:#000;">用户列表</a>
+           </li>
+
+	   <li class="collection-item" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('main.role')}}" style="color:#000;">角色管理</a>
+           </li>
+
+           <li class="collection-item active" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('main.menu')}}" style="color:#000;">菜单管理</a>
+           </li>
+        </ul>
+     </div>
+
+    </li>
+
+         <li>
+        <a href="{{ url_for('.logs')}}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">fiber_new</i>日志审计</div></a>
+    </li>
+  </ul>
+</div>
+
+<div class="col s10">
+        <div class="col s10">
+            <div class="input-field search-wrapper row">
+                <div class="col s8">
+                </div>
+                <form method="get">
+                        <input id="icon_prefix" type="text" name="search_user" class="validate col s2" style="display:inline-block;">
+                        <i class="material-icons col s1 prefix" style="display:inline-block;height:42px;line-height:50px;cursor:pointer;">search</i>
+                    <div class="search-results">
+                    </div>
+                </form>
+            </div>
+
+<a href="{{ url_for('main.useradd') }}" class="waves-effect waves-light btn btn-floating blue">添加</a>
+
+
+<table class="bordered">
+        <thead>
+          <tr>
+              <th data-field="name">用户</th>
+              <th data-field="email">邮箱</th>
+              <th data-field="status">状态</th>
+              <th data-field="">角色组</th>
+              <th data-field="times">最后操作时间</th>
+              <th data-field="action">Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+        {% for user in user_all %}
+          <tr id="user{{ user.id }}">
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            {% if user.status == 1 %}
+            <td>已激活</td>
+            {% else %}
+            <td>未激活</td>
+            {% endif %}
+            <td>{{ user.roles | default('',true)}}</td>
+            <td>{{ user.last_time.strftime('%Y-%m-%d %H:%M%:%S') }}</td>
+            <td>
+        <a title="编辑" href="{{ url_for('main.edituser',users=user.username ) }}"><i class="material-icons">mode_edit</i></a>
+
+        <a title="删除" href="#modals{{ user.id }}"><i class="material-icons">delete</i></a>
+        <div id="modals{{ user.id }}" class="modal">
+                <div class="modal-content">
+                <h4>确定要删除用户:{{ user.username }}?</h4>
+                </div>
+                <div class="modal-footer">
+                <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" onclick="deluser('{{ user.id }}')">同意</a>
+                </div>
+        </div>
+        </td>
+        {% endfor %}
+          </tr>
+        </tbody>
+</table>
+
+<div class="row">
+ <div class="col l4"></div>
+ <div class="col l5">
+  <ul class="pagination"> 
+    {% if pagination.has_prev %}
+    <li class="disabled"><a href="{{ url_for('main.role',page=pagination.prev_num) }}"><i class="material-icons">chevron_left</i></a></li>
+    {% endif %}
+    {%set page_now=pagination.page%}
+    {%set page_count=pagination.pages%}
+
+    {%for i in pagination.iter_pages()%}
+        {% if i %}
+          {% if i==pagination.page %}
+                <li class="waves-effect"><a href="{{ url_for('main.users',page=i) }}">{{ i }}</a></li>
+          {% else %}
+                <li class="waves-effect"><a href="{{ url_for('main.users',page=i) }}">{{ i }}</a></li>
+          {% endif %}
+        {% endif %}
+    {% endfor %}
+
+    {%if pagination.has_next %}
+        <li class="waves-effect"><a href="{{ url_for('main.role',page=pagination.next_num) }}"><i class="material-icons">chevron_right</i></a></li>
+    {% endif %}
+    
+    <li class="waves-effect">
+            页数({{page_now}}/{{page_count}})
+    </li>
+  </ul>
+ </div>
+</div>
+
+</div>
+</body>
+<script>
+
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+      {% for i in messages %}
+         Materialize.toast('{{ i }}', 5000,'rounded')
+      {% endfor %}
+  {% endif %}
+{% endwith %}
+
+function deluser(id){
+    var user_id = {
+        "id": id
+    }
+    $.ajax({
+      cache: false,
+      type: "POST",
+      url: "deluser",
+      data: user_id,
+      async: false,
+      dataType: "json",
+      success: function(data) {
+        if (data.status == "success") {
+            $("#user" + id).remove()
+            window.location.href="{{ url_for('main.users')}}";
+            }
+      },
+      error:  function(data) {
+        Materialize.toast('Error: 没有权限操作', 5000,'rounded')
+      },
+  })
+
+}
+
+
+
+ $(document).ready(function(){
+    $('.modal').modal();
+  });
+</script>

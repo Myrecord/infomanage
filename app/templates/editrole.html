@@ -1,0 +1,211 @@
+<head>
+        <link href="{{ url_for('static', filename='fonts/fonts.css') }}" rel="stylesheet" />
+       <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/materialize.min.css') }}"  media="screen,projection"/>
+       <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='ztree/css/metroStyle/metroStyle.css') }}"  media="screen,projection"/>
+
+	<script type="text/javascript" src="{{ url_for('static',filename='js/jquery-2.1.1.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static',filename='js/materialize.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='ztree/js/jquery.ztree.all.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='validation/jquery.validate.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='validation/messages_zh.js') }}"></script>
+
+
+    <nav >
+     <div class="nav-wrapper #000000 black">
+      <a href="#!" class="brand-logo center">Web Automation</a>
+      <ul class="right hide-on-med-and-down">
+        {% if current_user.is_authenticated %}
+            <li>用户 : {{ current_user.username }}&emsp;</li>
+            <li><a href="{{ url_for('auth.logout') }}">退出登录</a></li>
+            <li><a></a></i>
+        {% endif %}
+     </ul>
+   </div>
+    </nav>
+
+</head>
+
+<style type="text/css">
+
+    label.error {
+    padding-left: 16px;
+    padding-bottom: 2px;
+    font-weight: bold;
+    left: 10rem;
+    
+}
+.input-field.col label {
+    left: 10rem;
+}
+
+</style>
+
+<div id="test" class="row">
+      <div id="left" class="col s2 ">
+     <ul class="collapsible popout" data-collapsible="accordion">
+    <li>
+     <a href="{{ url_for('.index') }}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">home</i>首页</div></a>
+    </li>
+    <li>
+    <a href="{{ url_for('.checkip') }}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">place </i>I P 查询</div></a>
+    </li>
+
+      <li>
+	<a href="{{ url_for('main.listfile')}}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">swap_vert</i>上传下载</div></a>
+    </li>
+
+    <li>
+        <a href="{{ url_for('.update')}}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">fiber_new</i>版本更新</div></a>
+    </li>
+
+     <li>
+     <div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">cloud_queue</i>资源管理</div>
+      <div class="collapsible-body">
+        <ul class="collection active">
+           <li class="collection-item" style="border:0;">
+               <a href="{{ url_for('main.loadcdn') }}" style="color:#000;">同步CDN</a>
+           </li>
+           <li class="collection-item" style="border:0;">
+               <a href="{{ url_for('main.osslist') }}" style="color:#000;">资源存储</a>
+           </li>
+        </ul>
+     </div>
+    </li>
+
+
+    <li>
+      <div class="collapsible-header" style="font-weight:bold;background-color:#fff;"><i class="material-icons">computer</i>主机信息</div>
+      <div class="collapsible-body">
+        <ul class="collection active">
+           <li class="collection-item" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('.hostgroup')}}" style="color:#000;">主机分组</a>
+           </li>
+           <li class="collection-item" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('.host') }}" style="color:#000;">主机管理</a>
+           </li>
+             <li class="collection-item" style="border:0;">
+	       <a href="{{ url_for('main.datastores') }}" style="color:#000;">数据存储</a>
+	   </li>
+        </ul>
+     </div>
+    </li>
+    <li>
+      <div class="collapsible-header active" style="font-weight:bold;"><i class="material-icons">face</i>用户管理</div>
+      <div class="collapsible-body">
+        <ul class="collection active">
+
+            <li class="collection-item" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('main.users')}}" style="color:#000;">用户列表</a>
+           </li>
+
+           <li class="collection-item" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('main.role')}}" style="color:#000;">角色管理</a>
+           </li>
+
+           <li class="collection-item active" style="background-color:#fff;border:0;">
+               <a href="{{ url_for('main.menu')}}" style="color:#000;">菜单管理</a>
+           </li>
+        </ul>
+     </div>
+
+    </li>
+
+         <li>
+        <a href="{{ url_for('.logs')}}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">fiber_new</i>日志审计</div></a>
+    </li>
+  </ul>
+</div>
+<div class="col s10">
+ <SCRIPT LANGUAGE="JavaScript">
+   var zTreeObj;
+   var setting = {
+ 
+    check: {
+		      enable: true,
+              chkStyle: "checkbox",
+		      chkboxType: { "Y":"p","N": "s" }
+	      },
+
+	data: {
+	      simpleData: {
+	          enable: true,
+		        idKey: "id",
+		        pidKey: "pId",
+		        rootPId: 0
+		    }
+	}
+
+   };
+
+   var zNodes = [
+       {% for i in menuall %}
+           {"id":'{{ i.id }}', "pId":{{ i.submenuId }}, "name":'{{ i.name }}',"level":'{{ i.level }}',open: true},      
+       {% endfor %}
+
+   ];
+
+   $(document).ready(function(){
+    treenode = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+
+
+    var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+    var data = "{{ rolename.permission }}";
+    var datas = data.split(',');
+    for(var i = 0;i<datas.length;i++) {
+        var nodes = treeObj.getNodesByParam("id", datas[i], null);
+                                                           
+        treeObj.checkNode(nodes[0],true,true);
+        }
+    });
+
+        function subrole(){
+            var chkNodeStr="";
+            var treenode = $.fn.zTree.getZTreeObj("treeDemo");
+             chkNodeArr = treenode.getCheckedNodes(true);    
+             for (var i = 0; i < chkNodeArr.length; i++) {
+                 chkNodeStr += chkNodeArr[i].id+",";
+             }
+             document.getElementById("idlist").value = chkNodeStr;
+                 $.ajax({
+                     url: 'editrole',
+                     type: 'POST', 
+                     async: true,   
+                     data: $('#addrole').serialize(),
+                     dataType: 'json', 
+                     success: function (data) {
+                        window.location.href = "{{ url_for('main.role') }}"
+                                            },
+                 });
+            };
+
+  </SCRIPT>
+<div class="col s1"></div>
+<div class="col s4">
+     <ul id="treeDemo" class="ztree"></ul>
+</div>
+
+  <div class="row">
+    <form id="addrole" class="col s7" method="post">
+        <div class="row">
+            <div class="input-field col s3">
+              <input type="hidden" id="idlist" name="idlist"/>
+            </div>
+          </div>
+   
+        <div class="row">
+            <div class="input-field col s3">
+              <input id="ids" type="hidden" name="ids" value="{{ rolename.id }}" class="validate">
+            </div>
+          </div>
+
+      <div class="row">
+        <div class="input-field col s7">
+          <input disabled id="aaaa" type="text" name="aaaa" value="{{ rolename.name }}" class="validate">
+        </div>
+      </div>
+
+    </form>
+  <div class="col s3"></div>
+  <a id="didClick" class="waves-effect waves-light btn" onclick="subrole();" >保存<i class="material-icons right">send</i></a>
+  </div>
+</div>
