@@ -14,3 +14,6 @@
 6. 对用户用户权限进行分组.
 7. 添加菜单功能
 8. 记录用户操作日志
+# 模块介绍
+#### 后端模块：
+flask、flask-mail、Flask-Script、Flask-Migrate、Flask-SQLAlchemy、SQLAlchemy、paramiko
