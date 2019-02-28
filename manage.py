@@ -32,11 +32,10 @@ manager.add_command("shell", Shell(make_context=make_shell_context))
 manager.add_command('db', MigrateCommand)
 
 if __name__ == '__main__':
-    manager.run()
-    #sockets.run(app,host='127.0.0.1',port=5000,debug=True)
-    # from gevent import pywsgi
-    # from geventwebsocket.handler import WebSocketHandler
-    #
-    # server = pywsgi.WSGIServer(('192.168.3.73', 5000), app, handler_class=WebSocketHandler)
-    # print("web server start ... ")
-    # server.serve_forever()
+    #manager.run()
+    from gevent import pywsgi
+    from geventwebsocket.handler import WebSocketHandler
+    
+    server = pywsgi.WSGIServer(('192.168.3.73', 5000), app, handler_class=WebSocketHandler)
+    print("web server start ... ")
+    server.serve_forever()
