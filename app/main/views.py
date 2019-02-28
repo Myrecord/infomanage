@@ -171,7 +171,7 @@ def update(permission_status):
     return redirect(url_for('main.index'))
 
 def jobs(area, version, types):
-    print area, version, types
+    print area, version, types  #传入参数脚本
 
 
 @main.route('/updatedata', methods=['GET', 'POST'])
