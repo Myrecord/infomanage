@@ -16,3 +16,8 @@
 8. 记录用户操作日志
 # 图形界面
 
+![image](https://github.com/Myrecord/infomanage/blob/master/1.png)
+![image](https://github.com/Myrecord/infomanage/blob/master/2.png)
+![image](https://github.com/Myrecord/infomanage/blob/master/3.png)
+![image](https://github.com/Myrecord/infomanage/blob/master/4.png)
+![image](https://github.com/Myrecord/infomanage/blob/master/5.png)
