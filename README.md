@@ -30,5 +30,10 @@
  
  3.创建mysql数据库:infomanage
  
+ 4.配置infomanage/config.py文件
+   修改mysql账户名称，可自行添加用户密码
+   添加邮件服务器地址，作为用户注册发送邮件
+   创建文件上传的目录fileloads，以及存放脚本目录script
+
  ```
 
