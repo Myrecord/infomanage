@@ -4,7 +4,7 @@ class Config:
     SECRET_KEY = 'hard to guess string'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_TRACK_MODIFICATIONS = True
-    FLASKY_MAIL_SUBJECT_PREFIX = 'Webdev'
+    FLASKY_MAIL_SUBJECT_PREFIX = 'Infomanage'
     FLASKY_MAIL_SENDER = '' #发送邮件地址
     FLASKY_ADMIN = '' #管理员邮件地址
     DEBUG = True
