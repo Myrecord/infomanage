@@ -28,12 +28,16 @@
  
  2.安装依赖包 pip install -r requirements.txt
  
- 3.创建mysql数据库:infomanage
+ 3.配置infomanage/config.py文件
  
- 4.配置infomanage/config.py文件
-   修改mysql账户名称，可自行添加用户密码
+   安装mysql服务，创建infomanage数据库（默认为root:127.0.0.1可自行修改）
+   
    添加邮件服务器地址，作为用户注册发送邮件
-   创建文件上传的目录fileloads，以及存放脚本目录script
+   
+   修改UPLOADED_FILE_DEST、SCRIPT_LOCAL_PATH路径
+   
+ 4.修改
+ 
 
  ```
 
