@@ -29,17 +29,6 @@
  2.安装依赖包 pip install -r requirements.txt
  
  3.配置infomanage/config.py文件
- 
-   安装mysql服务，创建infomanage数据库（默认为root:127.0.0.1可自行修改）
-   
-   添加邮件服务器地址，作为用户注册发送邮件
-   
-   修改UPLOADED_FILE_DEST、SCRIPT_LOCAL_PATH路径
-   
-   添加阿里云accesskey：ALIYUN_ACCESS_KEYID、ALIYUN_ACCESS_KEY_SECRET
-   
- 4.修改
- 
 
  ```
 
