@@ -26,7 +26,7 @@
 ```
  1.安装python2.7版本
  
- 2.安装依赖包 pip install -r requirements.txt
+ 2.安装依赖包 requirements.txt
  
  3.配置infomanage/config.py文件
 
