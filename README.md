@@ -28,5 +28,7 @@
  
  2.安装依赖包 pip install -r requirements.txt
  
- 3.创建mysql数据库:infomanage```
+ 3.创建mysql数据库:infomanage
+ 
+ ```
 
