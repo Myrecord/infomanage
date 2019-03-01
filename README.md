@@ -36,6 +36,8 @@
    
    修改UPLOADED_FILE_DEST、SCRIPT_LOCAL_PATH路径
    
+   添加阿里云accesskey：  ALIYUN_ACCESS_KEYID、ALIYUN_ACCESS_KEY_SECRET
+   
  4.修改
  
 
