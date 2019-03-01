@@ -23,7 +23,7 @@
 ![image](https://github.com/Myrecord/infomanage/blob/master/5.png)
 # 安装配置
 #### 一、准备环境
-·1.安装python2.7版本
+```1.安装python2.7版本
  
- 2.安装依赖包 pip install -r requirements.txt
-·
+ 2.安装依赖包 pip install -r requirements.txt```
+
