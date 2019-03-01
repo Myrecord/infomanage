@@ -3,15 +3,15 @@ import oss2
 import os
 import pickle
 from datetime import datetime
+from flask import current_app
 
-#Bucket.get_object_meta('')
 
 class Ossoperation:
 
 	def __init__(self):
-		self.endpoint = ''   #oss地址
-		self.auth = oss2.Auth('', '')  #阿里云key
-		self.Bucket = oss2.Bucket(self.auth, self.endpoint, 'gy-download-apk')
+		self.endpoint = current_app.config['OSS_ADDRESS']
+		self.auth = oss2.Auth(current_app.config['ALIYUN_ACCESS_KEYID'], current_app.config['ALIYUN_ACCESS_KEY_SECRET'])
+		self.Bucket = oss2.Bucket(self.auth, self.endpoint,current_app.config['OSS_NAME'])
 
 
 	def get_fileinfo(self):
@@ -31,9 +31,6 @@ class Ossoperation:
 			pickle.dump(dir_files,files)
 
 	def upload_files(self,objname,localfile):
-		oss2.resumable_upload(self.Bucket,objname,localfile,store=oss2.ResumableStore(root='/Users/root1/webdev/fileload'))
+		oss2.resumable_upload(self.Bucket,objname,localfile,store=oss2.ResumableStore(root=current_app.config['UPLOADED_FILE_DEST']))
 
 
-
-# a = Ossoperation()
-# a.get_fileinfo()

@@ -2,19 +2,20 @@ import json
 from aliyunsdkcore.client import AcsClient
 from aliyunsdkecs.request.v20140526 import DescribeInstancesRequest
 import pickle
+from flask import current_app
+
 
 
 class hostinfo():
 
 	def __init__(self):
-		self.zone = ['cn-hangzhou', 'cn-beijing', 'cn-shenzhen', 'cn-hongkong', ]
 		self.info = []
 		self.page = 4
 		self.count = {}
 
 	def get_host(self):
-		for zone in self.zone:
-			self.client = AcsClient('', '', zone) #阿里云key
+		for zone in current_app.config['ALIYUN_ZONE']:
+			self.client = AcsClient(current_app.config['ALIYUN_ACCESS_KEYID'], current_app.config['ALIYUN_ACCESS_KEY_SECRET'], zone)
 			for page_number in range(1, self.page):
 				request = DescribeInstancesRequest.DescribeInstancesRequest()
 				request.set_accept_format('json')
@@ -26,12 +27,12 @@ class hostinfo():
 
 	def grouping_count(self):
 		self.get_host()
-		for zone in self.zone:
+		for zone in current_app.config['ALIYUN_ZONE']:
 			for zone_host in sum(self.info,[]):
 				if zone == zone_host['RegionId']:
 				    self.count.setdefault(zone,[]).append(zone_host['RegionId'])
-		print self.count
 		for key,values in self.count.items():
 			self.count[key] = len(values)
 		with open('grouping_host_count','w') as files:
 			pickle.dump(self.count,files)
+

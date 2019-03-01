@@ -6,11 +6,11 @@ from aliyunsdkcdn.request.v20141111 import PushObjectCacheRequest
 from aliyunsdkcdn.request.v20141111 import DescribeRefreshQuotaRequest
 from aliyunsdkcdn.request.v20141111 import DescribeRefreshTasksRequest
 from aliyunsdkcdn.request.v20141111 import DescribeTopDomainsByFlowRequest
-
+from flask import current_app
 
 class pushcdn():
 	def __init__(self):
-		self.client = AcsClient('', '', 'cn-hangzhou')
+		self.client = AcsClient(current_app.config['ALIYUN_ACCESS_KEYID'], current_app.config['ALIYUN_ACCESS_KEY_SECRET'], 'cn-hangzhou')
 		self.domain = []
 		self.domain_ranking = {}
 
