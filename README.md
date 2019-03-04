@@ -33,13 +33,15 @@
  ```
 #### 二、创建mysql数据库
 ```
-CREATE DATABASE `cedardeploy` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE `infomanage` /*!40100 DEFAULT CHARACTER SET utf8 */;
+
+用户和密码配置好后，修改config文件中的mysql地址。
 ```
 
 
 #### 三、初始化数据库
 ```
-删除migrations目录在初始化
+删除migrations目录在进行初始化
 
 python manager.py db init
 
