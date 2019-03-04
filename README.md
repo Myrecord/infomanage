@@ -75,3 +75,7 @@ ALIYUN_ZONE = []   #地区
 OSS_ADDRESS = ''  #oss链接地址
 OSS_NAME = ''    #object name
 ```
+#### 五、启动
+```
+manage.py runserver -h host -p port
+```
