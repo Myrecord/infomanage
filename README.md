@@ -41,11 +41,11 @@ CREATE DATABASE `infomanage` /*!40100 DEFAULT CHARACTER SET utf8 */;
 ```
 删除migrations目录在进行初始化
 
-python manager.py db init
+python manage.py db init
 
-python manager.py db migrate
+python manage.py db migrate
 
-python manager.py db upgrade
+python manage.py db upgrade
 
 倒入权限表：menus.sql
 ```
