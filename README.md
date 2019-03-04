@@ -24,11 +24,9 @@
 # 安装配置
 #### 一、准备环境
 ```
- 1.安装python2.7版本
+ 安装python2.7版本
  
- 2.安装依赖包 requirements.txt
- 
- 3.配置infomanage/config.py文件
+ 安装依赖包 requirements.txt
 
  ```
 #### 二、创建mysql数据库
@@ -49,4 +47,8 @@ python manager.py db migrate
 
 python manager.py db upgrade
 
+倒入权限表：menus.sql
+```
+#### 四、配置infomanage/config.py 文件
+```
 ```
