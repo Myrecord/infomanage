@@ -32,15 +32,14 @@
 
  ```
 #### 二、创建mysql数据库
-
-创建数据库,请先修改配置文件
-
+```
 CREATE DATABASE `cedardeploy` /*!40100 DEFAULT CHARACTER SET utf8 */;
+```
 
-grant all on cedardeploy.* to deploy@127.0.0.1 identified by 'Deploy123';
 
-
-三、初始化数据库
+#### 三、初始化数据库
+```
+删除migrations目录在初始化
 
 python manager.py db init
 
@@ -48,4 +47,4 @@ python manager.py db migrate
 
 python manager.py db upgrade
 
-# 如果初始化数据库报错,检查是否有 migrations目录, 删除目录
+```
