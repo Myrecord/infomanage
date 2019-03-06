@@ -10,7 +10,7 @@
 
     <nav >
      <div class="nav-wrapper #000000 black">
-      <a href="#!" class="brand-logo center">Web Automation</a>
+      <a href="#!" class="brand-logo center">Info Manage</a>
       <ul class="right hide-on-med-and-down">
         {% if current_user.is_authenticated %}
             <li>用户 : {{ current_user.username }}&emsp;</li>
@@ -89,9 +89,7 @@ span{display:block}/*css注释说明：让span形成块*/
            <li class="collection-item" style="background-color:#fff;border:0;">
                <a href="{{ url_for('.host') }}" style="color:#000;">主机管理</a>
            </li>
-            <li class="collection-item" style="border:0;">
-	       <a href="{{ url_for('main.datastores') }}" style="color:#000;">数据存储</a>
-	   </li>
+
         </ul>
      </div>
     </li>

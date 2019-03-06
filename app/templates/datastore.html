@@ -9,7 +9,7 @@
 
     <nav >
      <div class="nav-wrapper #000000 black">
-      <a href="#!" class="brand-logo center">Web Automation</a>
+      <a href="#!" class="brand-logo center">Info Manage</a>
       <ul class="right hide-on-med-and-down">
         {% if current_user.is_authenticated %}
             <li>用户 : {{ current_user.username }}&emsp;</li>
@@ -99,7 +99,6 @@
 
 
 <div class="col s10">
-
         <div class="input-field search-wrapper row">
                 <div class="col s7">
                 </div>
@@ -110,6 +109,9 @@
                     </div>
                 </form>
             </div>
+
+
+<div class="col s10">
 <a href="#modaladd" class="waves-effect waves-light btn btn-floating blue">添加</a>
     <div id="modaladd" class="modal">
             <div class="modal-content"><div class="row">
@@ -170,6 +172,9 @@
               <a id="new_datas"  class="modal-action modal-close waves-effect waves-green btn-flat">同意</a>
             </div>
          </div>
+</div>
+
+
 <table>
         <thead>
           <tr>
@@ -324,6 +329,7 @@ function subdata(id) {
      $(document).ready(function(){
         $('.modal').modal();
   });
+
 
 </script>
 </div>

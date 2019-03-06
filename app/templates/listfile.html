@@ -114,12 +114,6 @@ $(function(){
              cache:true, 
              async:false,
              dataType:'html',
-             success:function(data){
-                 alert('111111');
-             },
-             error:function(data){
-                 alert('222222');
-             },
         });
     });
 })
@@ -132,7 +126,7 @@ $(function(){
         　　uploadMultiple:true,//允许dropzone一次提交多个文件
         　　maxFiles: 10,//最大可上传的文件个数
         　　maxFilesize: 10,//MB
-        　　acceptedFiles: ".xlsx,.zip,.xls,.tar,.pub,.txt",
+        　　acceptedFiles: "{{ file_type | join(d=',') }}",
         　　autoProcessQueue: false,//阻止自动上传
            dictResponseError: '文件上传失败',
            dictInvalidFileType:"此类型文件无法上传", //如果文件类型错误，提示信息
@@ -149,7 +143,9 @@ $(function(){
 
                }),
                this.on("queuecomplete",function(file) {
-                       window.location.href = "{{ url_for('main.listfile') }}"
+                    Materialize.toast('文件上传成功', 3000,'rounded')
+                   setTimeout( function(){window.location.href="{{ url_for('main.listfile') }}";}, 2 * 1000 );
+
             }),
                this.on("error",function(file) {
                       Materialize.toast('Error: 没有权限操作', 5000,'rounded')
@@ -179,6 +175,7 @@ $(function(){
   closeOnClick: false, // Closes side-nav on <a> clicks, useful for Angular/Meteor
   draggable: true // Choose whether you can drag to open on touch screens
 });
+
 
 
 </script>

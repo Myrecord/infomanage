@@ -83,7 +83,7 @@
         });
 
         term.open(document.getElementById('#terminal'));
-        socket = new WebSocket('ws://192.168.3.73:5000/echo');
+        socket = new WebSocket('ws://127.0.0.1:5000/echo');
         term.attach(socket);
         socket.onclose = function () {
             term.writeln("连接已断开.")

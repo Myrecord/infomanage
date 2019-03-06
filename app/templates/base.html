@@ -19,8 +19,8 @@
      
     <nav >
      <div class="nav-wrapper #000000 black">
-      <a href="#!" class="brand-logo center">Web Automation</a>
-      <ul class="right hide-on-med-and-down">
+      <a href="#!" class="brand-logo center">Info Manage</a>
+      <ul class="right hide-on-med-and-down"> 
         {% if current_user.is_authenticated %}
 	    <li>用户 : {{ current_user.username }}&emsp;</li>
             <li><a href="{{ url_for('auth.logout') }}">退出登录</a></li>
@@ -76,9 +76,7 @@
 	   <li class="collection-item" style="border:0;">
 	       <a href="{{ url_for('main.host') }}" style="color:#000;">主机管理</a>
 	   </li>
-        <li class="collection-item" style="border:0;">
-	       <a href="{{ url_for('main.datastores') }}" style="color:#000;">数据存储</a>
-	   </li>
+
 	</ul>
      </div>
     </li>

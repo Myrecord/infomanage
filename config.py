@@ -24,6 +24,7 @@ class Config:
     ALIYUN_ZONE = []   #地区
     OSS_ADDRESS = ''  #oss链接地址
     OSS_NAME = ''    #object name
+    FILE_TYPE = ['.xlsx', '.xls', '.zip', '.tar', '.pub', '.txt']
 
     @staticmethod
     def init_app(app):

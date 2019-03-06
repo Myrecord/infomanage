@@ -8,7 +8,7 @@
     <script type="text/javascript" src="static/js/materialize.min.js">   </script>
     <nav >
      <div class="nav-wrapper #000000 black">
-      <a href="#!" class="brand-logo center">Web Automation</a>
+      <a href="#!" class="brand-logo center">Info Manage</a>
       <ul class="right hide-on-med-and-down">
         {% if current_user.is_authenticated %}
             <li>用户 : {{ current_user.username }}&emsp;</li>
@@ -69,7 +69,7 @@ table td,th{
     </li>
 
 		    <li>
-        <a href="{{ url_for('.update')}}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">fiber_new</i>版本更新</div></a>
+        <a href="{{ url_for('main.update')}}" style="color:#000;"><div class="collapsible-header" style="font-weight:bold;"><i class="material-icons">fiber_new</i>版本更新</div></a>
     </li>
 		<li>
 
@@ -99,9 +99,6 @@ table td,th{
                             <li class="collection-item active" style="background-color:#fff;border:0;">
                                 <a href="{{ url_for('main.host') }}" style="color:#000;">主机管理</a>
                             </li>
-                            <li class="collection-item" style="border:0;">
-	                            <a href="{{ url_for('main.datastores') }}" style="color:#000;">数据存储</a>
-	                        </li>
                         </ul>
                     </div>
                 </li>
@@ -133,8 +130,7 @@ table td,th{
         </div>
         <div class="col s10">
             <div class="input-field search-wrapper row">
-                <div class="col s8">
-                </div>
+                <div class="col s8"></div>
                 <form method="get">
                         <input id="icon_prefix" type="text" name="hostsearch" class="validate col s2" style="display:inline-block;">
                         <i class="material-icons col s1 prefix" style="display:inline-block;height:42px;line-height:50px;cursor:pointer;">search</i>
@@ -254,8 +250,6 @@ table td,th{
   	</div>
         </div>
      <div>
-
-
 
           <div class="col s10"></div>
         <a class="waves-effect waves-light btn " style="padding-right:10px" onclick="syncdata()"><i class="material-icons right">cloud</i>同步</a>
@@ -586,7 +580,7 @@ $(function(){
        });
    });
 
-   function syncdata() {
+function syncdata() {
        $.ajax({
                 cache: false,
                 type: "POST",
