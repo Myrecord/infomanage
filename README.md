@@ -75,6 +75,8 @@ ALIYUN_ZONE = ['cn-hangzhou', 'cn-beijing']   #地区
 OSS_ADDRESS = ''  #oss链接地址
 OSS_NAME = ''    #object name
 FILE_TYPE = ['.xlsx', '.xls', '.zip', '.tar', '.pub', '.txt'] #指定文件上传类型
+UPDATE_SCRIPT = os.path.join(SCRIPT_LOCAL_PATH,'weixin.py') #传入任务脚本
+UPDATE_SCRIPT_ARGS = ['222','3333','4444'] #任务脚本参数
 ```
 #### 五、启动
 ```
