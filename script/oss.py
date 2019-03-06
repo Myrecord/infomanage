@@ -13,7 +13,6 @@ class Ossoperation:
 		self.auth = oss2.Auth(current_app.config['ALIYUN_ACCESS_KEYID'], current_app.config['ALIYUN_ACCESS_KEY_SECRET'])
 		self.Bucket = oss2.Bucket(self.auth, self.endpoint,current_app.config['OSS_NAME'])
 
-
 	def get_fileinfo(self):
 		dir_files = {}
 		try:
@@ -27,7 +26,7 @@ class Ossoperation:
 					dir_files.setdefault(dirname,[]).append({filename:[files_size,dates]})
 		except Exception as e:
 			raise e
-		with open('oss_obj_info','w') as files:
+		with open(current_app.config['SCRIPT_LOCAL_PATH'] +'/' + 'oss_obj_info','w') as files:
 			pickle.dump(dir_files,files)
 
 	def upload_files(self,objname,localfile):
