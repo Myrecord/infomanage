@@ -67,13 +67,14 @@ MAIL_PASSWORD = ''		#邮件密码
 SQLALCHEMY_DATABASE_URI = 'mysql://root:@127.0.0.1/infomanage' #mysql数据库地址
 SCHEDULER_API_ENABLED = True
 use_reloader=False
-UPLOADED_FILE_DEST = '/Users/root1/infomanage/fileloads'
-SCRIPT_LOCAL_PATH = '/Users/root1/infomanage/script'
+UPLOADED_FILE_DEST = '/Users/root1/infomanage/fileloads' #文件上传路径
+SCRIPT_LOCAL_PATH = '/Users/root1/infomanage/script' #脚本路径
 ALIYUN_ACCESS_KEYID = ''  #阿里云keyid
 ALIYUN_ACCESS_KEY_SECRET = '' #阿里云key
-ALIYUN_ZONE = []   #地区
+ALIYUN_ZONE = ['cn-hangzhou', 'cn-beijing']   #地区
 OSS_ADDRESS = ''  #oss链接地址
 OSS_NAME = ''    #object name
+FILE_TYPE = ['.xlsx', '.xls', '.zip', '.tar', '.pub', '.txt'] #指定文件上传类型
 ```
 #### 五、启动
 ```
