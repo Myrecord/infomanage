@@ -78,5 +78,5 @@ FILE_TYPE = ['.xlsx', '.xls', '.zip', '.tar', '.pub', '.txt'] #指定文件上�
 ```
 #### 五、启动
 ```
-manage.py runserver -h host -p port
+manage.py runserver -h host -p port  #指定主机、端口
 ```
