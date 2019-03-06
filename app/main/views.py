@@ -5,20 +5,21 @@ sys.setdefaultencoding('utf8')
 
 from flask import render_template, jsonify, redirect, url_for, flash, current_app, send_from_directory,Response
 from script.push_cdn import pushcdn
-from flask import request,abort
+from flask import request
 from sqlalchemy import func, or_
 from .. import db
 from ..models import Hosts, Groupname, Grouphostid, User, Menu, Tasks, Filename, Logs, Role,datastore
 from . import main
 from flask_login import login_required, current_user
 from datetime import *
-import os, re
+import os
 from .. import scheduler
 import pickle
 from script.oss import Ossoperation
 from app import sockets
 from script.webssh_conncet import Remote
 from script.hosts import hostinfo
+from script.rdsdata import *
 import threading
 from functools import wraps
 
@@ -82,6 +83,16 @@ def checkip(permission_status):
         flash('Error: 没有权限查看')
     return redirect(url_for('main.index'))
 
+@main.route('/checkip_data', methods=['GET', 'POST'])
+@login_required
+@permission('checkip_data')
+def checkip_data(permission_status):
+    if permission_status:
+        if request.method == 'POST':
+            pass
+    return redirect(url_for('main.checkip'))
+
+
 
 @main.route('/loadcdn', methods=['GET', 'POST'])
 @login_required
@@ -131,8 +142,8 @@ def osslist(permission_status):
         with open(os.path.join(current_app.config['SCRIPT_LOCAL_PATH'],'oss_obj_info'),'r') as files:
             ossobject = pickle.load(files)
         if chdirs:
-            return render_template('ossfile.html',ossobject=ossobject,chdirs=chdirs)
-        return render_template('osslist.html',ossobject = ossobject)
+            return render_template('ossfile.html',ossobject=ossobject,chdirs=chdirs,file_type=current_app.config['FILE_TYPE'])
+        return render_template('osslist.html',ossobject = ossobject,file_type=current_app.config['FILE_TYPE'])
     else:
         flash('Error: 没有权限查看')
     return redirect(url_for('main.index'))
@@ -156,6 +167,24 @@ def oss_upfile(permission_status):
         return redirect(url_for('main.osslist'))
     return Response(status=500)
 
+@main.route('/sync_oss', methods=['GET', 'POST'])
+@login_required
+@permission('sync_oss')
+def sync_oss(permission_status):
+    if permission_status:
+        try:
+            syncdata = Ossoperation()
+            syncdata.get_fileinfo()
+            status = {
+                'status': 'success',
+            }
+            flash('更新信息成功')
+            userlog(current_user.username, request.remote_addr, '更新OSS')
+            return jsonify(status)
+        except Exception as e:
+            flash(e)
+    return Response(status=500)
+
 
 @main.route('/update', methods=['GET', 'POST'])
 @login_required
@@ -171,7 +200,7 @@ def update(permission_status):
     return redirect(url_for('main.index'))
 
 def jobs(area, version, types):
-    print area, version, types  #传入参数脚本
+    print area, version, types
 
 
 @main.route('/updatedata', methods=['GET', 'POST'])
@@ -444,7 +473,6 @@ def sync_data(permission_status):
             db.session.query(Hosts).delete()
             hostinfos = hostinfo()
             for i in sum(hostinfos.get_host(),[]):
-                print i['PublicIpAddress']['IpAddress'][0]
                 info = Hosts(netip=i['PublicIpAddress']['IpAddress'][0],
                         name=i['InstanceName'],
                         area=i['RegionId'],
@@ -590,99 +618,107 @@ def deletegroup(permission_status):
             return redirect(url_for('main.hostgroup'))
     return Response(status=500)
 
-@main.route('/datastores')
-@login_required
-@permission('datastores')
-def datastores(permission_status):
-    if permission_status:
-        page = request.args.get('page', 1, type=int)
-        if request.values.get('datasearch'):
-            pagination = db.session.query(datastore).filter(or_(
-                datastore.name.like('%' + request.values.get('datasearch') + '%'),
-                datastore.netip.like('%' + request.values.get('datasearch') + '%'))).paginate(page, per_page=10)
-            datainfo = pagination.items
-            return render_template('datastore.html', datainfo=datainfo, pagination=pagination)
-        pagination = db.session.query(datastore).paginate(page,per_page=10)
-        datainfo = pagination.items
-        return render_template('datastore.html',datainfo = datainfo,pagination = pagination)
-    else:
-        flash('Error: 没有权限查看')
-    return redirect(url_for('main.index'))
-
-@main.route('/editdatas',methods=['GET','POST'])
-@login_required
-@permission('editdatas')
-def editdatas(permission_status):
-    if permission_status:
-        if request.method == 'POST':
-            new_data = datastore.query.filter_by(id=request.form.get('ids')).all()
-            try:
-                for data in new_data:
-                    data.netip = request.form.get('netip')
-                    data.port = request.form.get('port')
-                    data.cpu = request.form.get('cpu')
-                    data.memory = request.form.get('memory')
-                    data.name = request.form.get('name')
-                    data.area = request.form.get('area')
-                    data.version = request.form.get('version')
-                    data.connect_number = request.form.get('connect_number')
-                    data.types = request.form.get('types')
-                    db.session.add(data)
-                    flash('编辑成功')
-                    userlog(current_user.username, request.remote_addr, '编辑数据库信息')
-                db.session.commit()
-            except Exception as e:
-                raise e
-        return redirect(url_for('main.datastores'))
-    else:
-        flash('Error: 没有权限操作')
-    return redirect(url_for('main.datastores'))
-
-@main.route('/deldatas',methods=['GET','POST'])
-@login_required
-@permission('deldatas')
-def deldatas(permission_status):
-    if permission_status:
-        if request.values.get('ids'):
-            try:
-                delinfo = datastore.query.filter(datastore.id == request.values.get('ids')).first()
-                db.session.delete(delinfo)
-                db.session.commit()
-                flash('删除成功')
-                userlog(current_user.username, request.remote_addr, '删除数据库信息')
-            except Exception as e:
-                raise e
-        return redirect(url_for('main.datastores'))
-    else:
-        flash('Error: 没有权限操作')
-    return redirect(url_for('main.datastores'))
-
-@main.route('/adddatas',methods=['GET','POST'])
-@login_required
-@permission('adddatas')
-def adddatas(permission_status):
-    if permission_status:
-        if request.method == 'POST':
-            try:
-                new_data = datastore(
-                    netip=request.form.get('netip'),
-                    port=request.form.get('port'),
-                    cpu=request.form.get('cpu'),
-                    memory=request.form.get('memory'),
-                    name=request.form.get('name'),
-                    area=request.form.get('area'),
-                    types=request.form.get('types'),
-                    version=request.form.get('version'),
-                    connect_number=request.form.get('connect_number')
-                )
-                db.session.add(new_data)
-                db.session.commit()
-                flash('添加数据信息成功')
-                userlog(current_user.username, request.remote_addr, '添加数据库信息')
-            except Exception as e:
-                raise e
-        return redirect(url_for('main.datastores'))
-    return Response(status=500)
+# @main.route('/datastores',methods=['GET', 'POST'])
+# @login_required
+# @permission('datastores')
+# def datastores(permission_status):
+#     if permission_status:
+#         page = request.args.get('page', 1, type=int)
+#         if request.values.get('datasearch'):
+#             pagination = db.session.query(datastore).filter(or_(
+#                 datastore.name.like('%' + request.values.get('datasearch') + '%'),
+#                 datastore.netip.like('%' + request.values.get('datasearch') + '%'))).paginate(page, per_page=10)
+#             datainfo = pagination.items
+#             return render_template('datastore.html', datainfo=datainfo, pagination=pagination)
+#         pagination = db.session.query(datastore).paginate(page,per_page=10)
+#         datainfo = pagination.items
+#         return render_template('datastore.html',datainfo = datainfo,pagination = pagination)
+#     else:
+#         flash('Error: 没有权限查看')
+#     return redirect(url_for('main.index'))
+#
+# @main.route('/sync_databases',methods=['GET', 'POST'])
+# @login_required
+# def sync_databases():
+#     a = datainfo()
+#     print a.query_mysql()
+#     return redirect(url_for('main.datastores'))
+#
+#
+# @main.route('/editdatas',methods=['GET','POST'])
+# @login_required
+# @permission('editdatas')
+# def editdatas(permission_status):
+#     if permission_status:
+#         if request.method == 'POST':
+#             new_data = datastore.query.filter_by(id=request.form.get('ids')).all()
+#             try:
+#                 for data in new_data:
+#                     data.netip = request.form.get('netip')
+#                     data.port = request.form.get('port')
+#                     data.cpu = request.form.get('cpu')
+#                     data.memory = request.form.get('memory')
+#                     data.name = request.form.get('name')
+#                     data.area = request.form.get('area')
+#                     data.version = request.form.get('version')
+#                     data.connect_number = request.form.get('connect_number')
+#                     data.types = request.form.get('types')
+#                     db.session.add(data)
+#                     flash('编辑成功')
+#                     userlog(current_user.username, request.remote_addr, '编辑数据库信息')
+#                 db.session.commit()
+#             except Exception as e:
+#                 raise e
+#         return redirect(url_for('main.datastores'))
+#     else:
+#         flash('Error: 没有权限操作')
+#     return redirect(url_for('main.datastores'))
+#
+# @main.route('/deldatas',methods=['GET','POST'])
+# @login_required
+# @permission('deldatas')
+# def deldatas(permission_status):
+#     if permission_status:
+#         if request.values.get('ids'):
+#             try:
+#                 delinfo = datastore.query.filter(datastore.id == request.values.get('ids')).first()
+#                 db.session.delete(delinfo)
+#                 db.session.commit()
+#                 flash('删除成功')
+#                 userlog(current_user.username, request.remote_addr, '删除数据库信息')
+#             except Exception as e:
+#                 raise e
+#         return redirect(url_for('main.datastores'))
+#     else:
+#         flash('Error: 没有权限操作')
+#     return redirect(url_for('main.datastores'))
+#
+# @main.route('/adddatas',methods=['GET','POST'])
+# @login_required
+# @permission('adddatas')
+# def adddatas(permission_status):
+#     if permission_status:
+#         if request.method == 'POST':
+#             try:
+#                 new_data = datastore(
+#                     netip=request.form.get('netip'),
+#                     port=request.form.get('port'),
+#                     cpu=request.form.get('cpu'),
+#                     memory=request.form.get('memory'),
+#                     name=request.form.get('name'),
+#                     area=request.form.get('area'),
+#                     types=request.form.get('types'),
+#                     version=request.form.get('version'),
+#                     connect_number=request.form.get('connect_number')
+#                 )
+#                 db.session.add(new_data)
+#                 db.session.commit()
+#                 flash('添加数据信息成功')
+#                 userlog(current_user.username, request.remote_addr, '添加数据库信息')
+#             except Exception as e:
+#                 raise e
+#         return redirect(url_for('main.datastores'))
+#     return Response(status=500)
 
 
 @main.route('/listfile', methods=['GET', 'POST'])
@@ -696,10 +732,10 @@ def listfile(permission_status):
             pagination = db.session.query(Filename)\
                 .filter(Filename.name.like('%' + filesearch + '%')).paginate(page, per_page=10)
             files_list = pagination.items
-            return render_template('listfile.html', pagination=pagination, files_list=files_list)
+            return render_template('listfile.html', pagination=pagination, files_list=files_list,file_type=current_app.config['FILE_TYPE'])
         pagination = db.session.query(Filename).order_by(Filename.id.desc()).paginate(page, per_page=10)
         files_list = pagination.items
-        return render_template('listfile.html', pagination=pagination, files_list=files_list)
+        return render_template('listfile.html', pagination=pagination, files_list=files_list,file_type=current_app.config['FILE_TYPE'])
     else:
         flash('Error: 没有权限查看')
     return redirect(url_for('main.index'))
@@ -710,21 +746,20 @@ def listfile(permission_status):
 def fileload(permission_status):
     if permission_status:
         if request.method == 'POST':
-            filetype = ['xlsx', 'xls', 'zip', 'tar', 'pub', 'txt']
+            now_time = datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
             for i in request.files:
                 f = request.files[i]
-                if f.filename.split('.')[1] not in filetype:
-                    return 'Error', 400
-                try:
-                    new_file = Filename(name=f.filename)
-                    db.session.add(new_file)
-                    db.session.commit()
-                except:
-                    db.session.rollback()
-                    return '文件名称重复', 500
-                userlog(current_user.username, request.remote_addr, '文件上传')
-                f.save(os.path.join(current_app.config['UPLOADED_FILE_DEST'],f.filename))
-        return render_template('fileload.html')
+                if '.' + f.filename.split('.')[-1] in current_app.config['FILE_TYPE']:
+                    try:
+                        f.save(os.path.join(current_app.config['UPLOADED_FILE_DEST'], f.filename) + '_' +now_time)
+                        new_file = Filename(name=f.filename + '_' +now_time)
+                        db.session.add(new_file)
+                        db.session.commit()
+                        userlog(current_user.username, request.remote_addr, '文件上传')
+                    except Exception as e:
+                        print e
+                        db.session.rollback()
+                    return redirect(url_for('main.listfile'))
     return Response(status=500)
 
 
@@ -746,10 +781,13 @@ def downfile(permission_status,filename):
 @permission('filedel')
 def filedel(permission_status,filename, file_id):
     if permission_status:
-        db.session.query(Filename).filter(Filename.id == file_id).delete()
-        os.remove(os.path.join(current_app.config['UPLOADED_FILE_DEST'], filename))
-        userlog(current_user.username, request.remote_addr, '删除文件')
-        return redirect(url_for('main.listfile'))
+        try:
+            db.session.query(Filename).filter(Filename.id == file_id).delete()
+            os.remove(os.path.join(current_app.config['UPLOADED_FILE_DEST'], filename))
+            userlog(current_user.username, request.remote_addr, '删除文件')
+        except:
+            pass
+            return redirect(url_for('main.listfile'))
     else:
         flash('Error: 没有权限操作')
     return redirect(url_for('main.listfile'))
