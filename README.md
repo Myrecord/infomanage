@@ -84,7 +84,7 @@ UPDATE_SCRIPT_ARGS = ['222','3333','4444'] #任务脚本参数
 
 2.版本更新，建议自行根本实际业务修改update.html页面，在config文件中提供有接口传入脚本以及参数，
 
-  同时修改main/views.py中的updatedata，将请求参数写入到数据路中
+  同时修改main/views.py中的updatedata路由，将请求参数写入到数据路中
 ```
 
 #### 六、启动
