@@ -22,6 +22,7 @@ from script.hosts import hostinfo
 from script.rdsdata import *
 import threading
 from functools import wraps
+import subprocess
 
 online_user = []
 @main.before_request
@@ -199,8 +200,11 @@ def update(permission_status):
         flash('Error: 没有权限查看')
     return redirect(url_for('main.index'))
 
-def jobs(area, version, types):
-    print area, version, types
+def jobs(script_name, *args):
+    try:
+        subprocess.Popen('python %s %s' %(script_name,' '.join(args[0])), shell=True)
+    except Exception as e:
+        print e
 
 
 @main.route('/updatedata', methods=['GET', 'POST'])
@@ -231,7 +235,7 @@ def updatedata(permission_status):
                             trigger='date',
                             run_date=dates,
                             id=dates,
-                            args=(areas, version, types))
+                            args=(current_app.config['UPDATE_SCRIPT'],current_app.config['UPDATE_SCRIPT_ARGS']))
                         userlog(current_user.username, request.remote_addr,'添加更新任务')
                     except:
                         db.session.rollback()
@@ -255,7 +259,7 @@ def deljobs(permission_status):
                 userlog(current_user.username, request.remote_addr, '删除更新任务')
                 flash('已删除此任务')
             except Exception as e:
-                flash('发生错误：%s' % e)
+                pass
             status = {'status': 'success'}
             return jsonify(status)
     else:

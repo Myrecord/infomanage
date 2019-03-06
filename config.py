@@ -25,6 +25,8 @@ class Config:
     OSS_ADDRESS = ''  #oss链接地址
     OSS_NAME = ''    #object name
     FILE_TYPE = ['.xlsx', '.xls', '.zip', '.tar', '.pub', '.txt']
+    UPDATE_SCRIPT = os.path.join(SCRIPT_LOCAL_PATH,'weixin.py')
+    UPDATE_SCRIPT_ARGS = ['222','3333','4444']
 
     @staticmethod
     def init_app(app):
