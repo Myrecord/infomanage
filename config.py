@@ -28,6 +28,9 @@ class Config:
     UPDATE_SCRIPT = os.path.join(SCRIPT_LOCAL_PATH,'weixin.py')
     UPDATE_SCRIPT_ARGS = ['222','3333','4444']
     CDN_DATATIME = '7'
+    WEBSSH_KEY_PATH = '/Users/root1/webdev/key'
+    WEBSSH_KEY_NAME = 'id_rsa'
+    WEBSSH_SERVER_PORT = '57678'
 
     @staticmethod
     def init_app(app):
