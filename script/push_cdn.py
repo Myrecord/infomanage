@@ -19,7 +19,7 @@ class pushcdn():
 		try:
 			request = DescribeTopDomainsByFlowRequest.DescribeTopDomainsByFlowRequest()
 			request.set_accept_format('json')
-			start_time = (datetime.now() - timedelta(days=7)).strftime('%Y-%m-%dT00:00:00Z')
+			start_time = (datetime.now() - timedelta(days=int(current_app.config['CDN_DATATIME']))).strftime('%Y-%m-%dT00:00:00Z')
 			end_time = datetime.now().strftime('%Y-%m-%dT00:00:00Z')
 			request.set_StartTime(start_time)
 			request.set_EndTime(end_time)
