@@ -80,6 +80,9 @@ FILE_TYPE = ['.xlsx', '.xls', '.zip', '.tar', '.pub', '.txt'] #上传文件的�
 UPDATE_SCRIPT = os.path.join(SCRIPT_LOCAL_PATH,'weixin.py')  #传入脚本
 UPDATE_SCRIPT_ARGS = ['222','3333','4444'] #脚本参数
 CDN_DATATIME = '7' #CDN7天流量数据展示
+WEBSSH_KEY_PATH = '/Users/root1/infomanage/key' #存在key文件目录
+WEBSSH_KEY_NAME = 'id_rsa' #key文件名称
+WEBSSH_SERVER_PORT = '22' #SSH端口
 ```
 #### 五、注意事项
 ```
@@ -91,7 +94,7 @@ CDN_DATATIME = '7' #CDN7天流量数据展示
   
 3.关于首页CDN展示的数据，修改config中的CDN_DATATIME参数获取不同时间的流量信息
 
-4.倒入数据库后默认的管理员账户：admin 密码:123123
+4.倒入数据库后默认的管理员账户：root 密码:123123
 ```
 #### 六、启动
 ```
