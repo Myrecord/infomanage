@@ -51,32 +51,35 @@ python manage.py db upgrade
 ```
 #### 四、配置infomanage/config.py 文件
 ```
+以下备注信息，根据自己情况更改
+
 SECRET_KEY = 'hard to guess string'
 SQLALCHEMY_COMMIT_ON_TEARDOWN = True
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 FLASKY_MAIL_SUBJECT_PREFIX = 'Infomanage'
-FLASKY_MAIL_SENDER = '' #发送邮件地址
-FLASKY_ADMIN = '' #管理员邮件地址
+FLASKY_MAIL_SENDER = 'admin@qq.com' #系统发件人
+FLASKY_ADMIN = 'admin@qq.com' #管理员邮件地址
 DEBUG = True
-MAIL_SERVER = '' #邮件服务器
+MAIL_SERVER = 'smtp.exmail.qq.com' #邮件服务器
 MAIL_PORT = 465  #邮件端口
 MAIL_USE_TLS = False 
 MAIL_USE_SSL = True 
-MAIL_USERNAME = '' #邮件账户
-MAIL_PASSWORD = ''		#邮件密码
+MAIL_USERNAME = 'admin@qq.com' #邮件账户
+MAIL_PASSWORD = '123123'		#邮件密码
 SQLALCHEMY_DATABASE_URI = 'mysql://root:@127.0.0.1/infomanage' #mysql数据库地址
 SCHEDULER_API_ENABLED = True
 use_reloader=False
-UPLOADED_FILE_DEST = '/Users/root1/infomanage/fileloads' #文件上传路径
-SCRIPT_LOCAL_PATH = '/Users/root1/infomanage/script' #脚本路径
+UPLOADED_FILE_DEST = '/Users/root1/infomanage/fileloads' #服务器存储上传文件的路径
+SCRIPT_LOCAL_PATH = '/Users/root1/infomanage/script' #存放脚本路径
 ALIYUN_ACCESS_KEYID = ''  #阿里云keyid
 ALIYUN_ACCESS_KEY_SECRET = '' #阿里云key
-ALIYUN_ZONE = ['cn-hangzhou', 'cn-beijing']   #地区
+ALIYUN_ZONE = ['cn-hangzhou', 'cn-beijing', 'cn-shenzhen', 'cn-hongkong']   #地区
 OSS_ADDRESS = ''  #oss链接地址
 OSS_NAME = ''    #object name
-FILE_TYPE = ['.xlsx', '.xls', '.zip', '.tar', '.pub', '.txt'] #指定文件上传类型
-UPDATE_SCRIPT = os.path.join(SCRIPT_LOCAL_PATH,'weixin.py') #传入任务脚本
-UPDATE_SCRIPT_ARGS = ['222','3333','4444'] #任务脚本参数
+FILE_TYPE = ['.xlsx', '.xls', '.zip', '.tar', '.pub', '.txt'] #上传文件的类型
+UPDATE_SCRIPT = os.path.join(SCRIPT_LOCAL_PATH,'weixin.py')  #传入脚本
+UPDATE_SCRIPT_ARGS = ['222','3333','4444'] #脚本参数
+CDN_DATATIME = '7' #CDN7天流量数据展示
 ```
 #### 五、注意事项
 ```
@@ -85,8 +88,11 @@ UPDATE_SCRIPT_ARGS = ['222','3333','4444'] #任务脚本参数
 2.版本更新，建议自行根据实际业务修改update.html页面，在config文件中提供有接口传入脚本以及参数，
 
   同时修改main/views.py中的updatedata路由，将请求参数写入到数据路中
-```
+  
+3.关于首页CDN展示的数据，修改config中的CDN_DATATIME参数获取不同时间的流量信息
 
+4.倒入数据库后默认的管理员账户：admin 密码:123123
+```
 #### 六、启动
 ```
 manage.py runserver -h host -p port  #指定主机、端口
