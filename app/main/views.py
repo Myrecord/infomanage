@@ -71,7 +71,8 @@ def index():
                            user_count = user_count,
                            onlien_user_count = onlien_user_count,
                            grouping_host_count = grouping_host_count,
-                           domain_ranping = pushcdn().get_domain())
+                           domain_ranping = pushcdn().get_domain(),
+                           cdn_datatime = current_app.config['CDN_DATATIME'])
 
 @main.route('/checkip', methods=['GET', 'POST'])
 @login_required
