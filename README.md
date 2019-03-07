@@ -39,7 +39,7 @@ CREATE DATABASE `infomanage` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
 #### 三、初始化数据库
 ```
-删除migrations目录在进行初始化
+如果migrations目录存在请先删除此目录在进行初始化
 
 python manage.py db init
 
@@ -47,7 +47,7 @@ python manage.py db migrate
 
 python manage.py db upgrade
 
-倒入权限表：menus.sql
+倒入数据库：infomanage.sql
 ```
 #### 四、配置infomanage/config.py 文件
 ```
@@ -96,7 +96,7 @@ WEBSSH_SERVER_PORT = '22' #SSH端口
   
 3.关于首页CDN展示的数据，修改config中的CDN_DATATIME参数获取不同时间的流量信息
 
-4.倒入数据库后默认的管理员账户：root 密码:123123
+4.倒入数据库后默认的管理员账户：root 密码: 123123
 ```
 #### 六、启动
 ```
