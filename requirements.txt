@@ -79,7 +79,7 @@ pycparser==2.18
 pycrypto==2.6.1
 pycryptodome==3.7.2
 pyflakes==1.6.0
-Pygments==2.2.0
+Pygments==2.7.4
 pylint==1.9.3
 PyNaCl==1.2.1
 pyobjc-core==2.5.1
