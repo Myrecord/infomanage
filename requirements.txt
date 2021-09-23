@@ -9,7 +9,7 @@ aliyun-python-sdk-kms==2.5.0
 aliyun-python-sdk-r-kvstore==2.0.1
 aliyun-python-sdk-rds==2.1.1
 altgraph==0.10.2
-ansible==1.9.4
+ansible==4.2.0
 appnope==0.1.0
 APScheduler==3.5.3
 asn1crypto==0.24.0
