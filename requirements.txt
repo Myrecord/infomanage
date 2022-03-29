@@ -66,7 +66,7 @@ modulegraph==0.10.4
 MySQL-python==1.2.5
 numpy==1.8.0rc1
 oss2==2.6.0
-paramiko==2.4.1
+paramiko==2.10.1
 pathlib2==2.3.0
 pexpect==4.4.0
 pickleshare==0.7.4
